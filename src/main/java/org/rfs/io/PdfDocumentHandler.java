@@ -1,12 +1,12 @@
 package org.rfs.io;
 
-import org.rfs.FSConfig;
-import org.rfs.model.DocumentFileAccess;
-import org.rfs.model.DocumentCreateMessage;
-import org.rfs.model.DocumentRemoveMessage;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.core.buffer.Buffer;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.rfs.FSConfig;
+import org.rfs.model.DocumentCreateMessage;
+import org.rfs.model.DocumentFileAccess;
+import org.rfs.model.DocumentRemoveMessage;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
