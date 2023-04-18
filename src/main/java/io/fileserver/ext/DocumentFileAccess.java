@@ -3,9 +3,9 @@ package io.fileserver.ext;
 import java.io.Serializable;
 import org.apache.commons.lang3.StringUtils;
 
-public record UserFileAccess(String userid, String organization, String filename) implements Serializable {
+public record DocumentFileAccess(String userid, String organization, String filename) implements Serializable {
 
-    public UserFileAccess {
+    public DocumentFileAccess {
         if (StringUtils.isBlank(userid)) {
             throw new IllegalArgumentException("userid must not be null or blank");
         }
@@ -19,7 +19,7 @@ public record UserFileAccess(String userid, String organization, String filename
 
     @Override
     public String toString() {
-        return "UserFileAccess[userid=" + userid + ", organization=" + organization + ", filename=" + filename + "]";
+        return "DocumentFileAccess [userid=" + userid + ", organization=" + organization + ", filename=" + filename + "]";
     }
 
 }

@@ -7,29 +7,28 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 /**
- * Delegates REST calls to the file access checker service (ACL).<p>
+ * Delegates REST calls to the document access checker service (ACL).<p>
  */
-@Path("/file-access")
+@Path("/document-access")
 @Produces(MediaType.APPLICATION_JSON)
-@RegisterRestClient(configKey = "file-access-api")
-public interface FileAccessResourceService {
+@RegisterRestClient(configKey = "document-access-api")
+public interface DocumentAccessResourceService {
 
     String TOKEN_HEADER = "Token";
 
     String API_KEY_HEADER = "ApiKey";
 
     /**
-     * Checks if the given user can access to the given file.
+     * Checks if the given user has access right to the given document.
      *
      * @param token used for the identification of the user
-     * @param messageId identifier of the requested file
-     * @return contains the information that is used for file identification or empty if the user has no access to the message
+     * @param messageId identifier of the requested document
+     * @return contains the information that is used for document file identification or empty if the user has no access to the it
      */
     @GET
-    @Path("file/{fileId}")
-    Uni<UserFileAccess> getFileAccess(@HeaderParam(TOKEN_HEADER) String token, @PathParam("fileId") Long fileId);
+    @Path("document/{documentId}")
+    Uni<DocumentFileAccess> getDocumentAccess(@HeaderParam(TOKEN_HEADER) String token, @PathParam("document") Long documentId);
 
-    
     /**
      * Validates the provided apiKey sent by the application.
      *
