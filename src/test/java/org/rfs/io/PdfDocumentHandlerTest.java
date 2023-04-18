@@ -22,7 +22,7 @@ import java.util.stream.IntStream;
 import static org.awaitility.Awaitility.await;
 
 @QuarkusTest
-class PdfDocumentHandlershould {
+class PdfDocumentHandlerTest{
 
     @Pdf
     @Inject
