@@ -32,7 +32,7 @@ class PdfDocumentHandlerTest{
     String rootDirectory;
 
     @Test
-    void invalidSingleFileRemovalMessageError() {
+    void invalidSingleFileRemovalError() {
         var subscriber = documentHandler.remove(new DocumentRemoveMessage("", "", "fake.pdf"))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
@@ -40,7 +40,7 @@ class PdfDocumentHandlerTest{
     }
 
     @Test
-    void messageBeRemoved() {
+    void documentBeRemoved() {
         var organizationId = "orgCode";
         var userId = "9999999";
         var fileName = "fakeForRemoval.pdf";
@@ -69,7 +69,7 @@ class PdfDocumentHandlerTest{
     }
 
     @Test
-    void invalidFileNotToBeWritten() {
+    void invalidDocumentNotToBeWritten() {
         var subscriber = documentHandler.write(new DocumentCreateMessage("", "", "fake.pdf", "payload"))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
