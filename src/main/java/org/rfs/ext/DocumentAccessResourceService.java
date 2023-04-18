@@ -1,5 +1,6 @@
 package org.rfs.ext;
 
+import org.rfs.model.DocumentFileAccess;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
@@ -22,7 +23,7 @@ public interface DocumentAccessResourceService {
      * Checks if the given user has access right to the given document.
      *
      * @param token used for the identification of the user
-     * @param messageId identifier of the requested document
+     * @param documentId identifier of the requested document
      * @return contains the information that is used for document file identification or empty if the user has no access to the it
      */
     @GET
