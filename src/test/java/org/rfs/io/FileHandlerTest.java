@@ -16,7 +16,7 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
-public class FileHandlerShould {
+public class FileHandlerTest {
 
     @Inject
     FileHandler fileHandler;
