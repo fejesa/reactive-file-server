@@ -1,4 +1,4 @@
-package io.fileserver;
+package org.rfs;
 
 public class FSConfig {
 

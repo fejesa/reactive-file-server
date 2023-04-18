@@ -1,3 +1,5 @@
+package org.rfs;
+
 import io.quarkus.runtime.Quarkus;
 import io.quarkus.runtime.annotations.QuarkusMain;
 

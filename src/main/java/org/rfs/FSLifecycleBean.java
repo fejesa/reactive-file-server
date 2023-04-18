@@ -1,4 +1,4 @@
-package io.fileserver.ext;
+package org.rfs;
 
 import io.quarkus.runtime.ShutdownEvent;
 import io.quarkus.runtime.StartupEvent;

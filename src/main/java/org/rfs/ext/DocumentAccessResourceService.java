@@ -1,4 +1,4 @@
-package io.fileserver.ext;
+package org.rfs.ext;
 
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;

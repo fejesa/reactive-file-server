@@ -1,4 +1,4 @@
-package io.fileserver.ext;
+package org.rfs.ext;
 
 import java.io.Serializable;
 import org.apache.commons.lang3.StringUtils;
