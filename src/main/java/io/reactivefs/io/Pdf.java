@@ -1,4 +1,4 @@
-package org.rfs.io;
+package io.reactivefs.io;
 
 import javax.inject.Qualifier;
 import java.lang.annotation.Retention;

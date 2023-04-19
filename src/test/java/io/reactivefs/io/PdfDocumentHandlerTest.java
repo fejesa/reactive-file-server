@@ -1,9 +1,11 @@
-package org.rfs.io;
+package io.reactivefs.io;
 
-import org.rfs.FSConfig;
-import org.rfs.model.DocumentFileAccess;
-import org.rfs.model.DocumentCreateMessage;
-import org.rfs.model.DocumentRemoveMessage;
+import io.reactivefs.FSConfig;
+import io.reactivefs.io.Pdf;
+import io.reactivefs.io.PdfDocumentHandler;
+import io.reactivefs.model.DocumentFileAccess;
+import io.reactivefs.model.DocumentCreateMessage;
+import io.reactivefs.model.DocumentRemoveMessage;
 import io.quarkus.test.junit.QuarkusTest;
 import io.smallrye.mutiny.helpers.test.UniAssertSubscriber;
 import io.vertx.core.file.FileSystemException;

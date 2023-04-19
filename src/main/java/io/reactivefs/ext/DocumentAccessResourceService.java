@@ -1,6 +1,6 @@
-package org.rfs.ext;
+package io.reactivefs.ext;
 
-import org.rfs.model.DocumentFileAccess;
+import io.reactivefs.model.DocumentFileAccess;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
@@ -24,7 +24,7 @@ public interface DocumentAccessResourceService {
      *
      * @param token used for the identification of the user
      * @param documentId identifier of the requested document
-     * @return contains the information that is used for document file identification or empty if the user has no access to the it
+     * @return contains the information that is used for document file identification or empty if the user has no access to it
      */
     @GET
     @Path("document/{documentId}")

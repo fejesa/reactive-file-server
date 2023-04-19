@@ -1,4 +1,4 @@
-package org.rfs;
+package io.reactivefs;
 
 import io.quarkus.runtime.Quarkus;
 import io.quarkus.runtime.annotations.QuarkusMain;

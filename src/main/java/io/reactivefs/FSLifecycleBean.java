@@ -1,4 +1,4 @@
-package org.rfs;
+package io.reactivefs;
 
 import io.quarkus.runtime.ShutdownEvent;
 import io.quarkus.runtime.StartupEvent;

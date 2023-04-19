@@ -1,4 +1,4 @@
-package org.rfs;
+package io.reactivefs;
 
 public class FSConfig {
 

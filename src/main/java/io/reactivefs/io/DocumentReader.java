@@ -1,6 +1,6 @@
-package org.rfs.io;
+package io.reactivefs.io;
 
-import org.rfs.model.DocumentFileAccess;
+import io.reactivefs.model.DocumentFileAccess;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.core.buffer.Buffer;
 

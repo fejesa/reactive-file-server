@@ -1,4 +1,4 @@
-package org.rfs.io;
+package io.reactivefs.io;
 
 import java.nio.file.Path;
 

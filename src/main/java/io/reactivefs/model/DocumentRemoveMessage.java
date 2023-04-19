@@ -1,4 +1,4 @@
-package org.rfs.model;
+package io.reactivefs.model;
 
 import org.apache.commons.lang3.StringUtils;
 

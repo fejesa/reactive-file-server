@@ -1,4 +1,4 @@
-package org.rfs.io;
+package io.reactivefs.io;
 
 import io.vertx.core.file.FileSystemException;
 import io.vertx.mutiny.core.Vertx;

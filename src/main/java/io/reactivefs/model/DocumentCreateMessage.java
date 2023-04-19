@@ -1,4 +1,4 @@
-package org.rfs.model;
+package io.reactivefs.model;
 
 /**
  * Defines the file creational message that contains the payload along with the owner and organization.

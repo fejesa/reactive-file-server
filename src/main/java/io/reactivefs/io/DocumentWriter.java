@@ -1,6 +1,6 @@
-package org.rfs.io;
+package io.reactivefs.io;
 
-import org.rfs.model.DocumentCreateMessage;
+import io.reactivefs.model.DocumentCreateMessage;
 import io.smallrye.mutiny.Uni;
 
 /**

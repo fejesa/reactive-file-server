@@ -1,7 +1,8 @@
-package org.rfs.io;
+package io.reactivefs.io;
 
-import org.rfs.FSConfig;
+import io.reactivefs.FSConfig;
 import io.quarkus.test.junit.QuarkusTest;
+import io.reactivefs.io.FileHandler;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Test;
 

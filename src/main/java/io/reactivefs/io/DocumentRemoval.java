@@ -1,6 +1,6 @@
-package org.rfs.io;
+package io.reactivefs.io;
 
-import org.rfs.model.DocumentRemoveMessage;
+import io.reactivefs.model.DocumentRemoveMessage;
 import io.smallrye.mutiny.Uni;
 
 /**
