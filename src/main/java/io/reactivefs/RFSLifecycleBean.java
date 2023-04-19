@@ -10,7 +10,7 @@ import javax.enterprise.event.Observes;
 import java.lang.invoke.MethodHandles;
 
 @ApplicationScoped
-public class FSLifecycleBean {
+public class RFSLifecycleBean {
 
     private final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

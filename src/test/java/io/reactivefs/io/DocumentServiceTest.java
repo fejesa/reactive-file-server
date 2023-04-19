@@ -1,8 +1,6 @@
 package io.reactivefs.io;
 
-import io.reactivefs.FSConfig;
-import io.reactivefs.io.Pdf;
-import io.reactivefs.io.PdfDocumentHandler;
+import io.reactivefs.RFSConfig;
 import io.reactivefs.model.DocumentFileAccess;
 import io.reactivefs.model.DocumentCreateMessage;
 import io.reactivefs.model.DocumentRemoveMessage;
@@ -24,13 +22,13 @@ import java.util.stream.IntStream;
 import static org.awaitility.Awaitility.await;
 
 @QuarkusTest
-class PdfDocumentHandlerTest{
+class DocumentServiceTest {
 
     @Pdf
     @Inject
-    PdfDocumentHandler documentHandler;
+    DocumentService documentHandler;
 
-    @ConfigProperty(name = FSConfig.ROOT_DIRECTORY)
+    @ConfigProperty(name = RFSConfig.ROOT_DIRECTORY)
     String rootDirectory;
 
     @Test

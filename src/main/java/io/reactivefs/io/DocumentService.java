@@ -3,7 +3,7 @@ package io.reactivefs.io;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.core.buffer.Buffer;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import io.reactivefs.FSConfig;
+import io.reactivefs.RFSConfig;
 import io.reactivefs.model.DocumentCreateMessage;
 import io.reactivefs.model.DocumentFileAccess;
 import io.reactivefs.model.DocumentRemoveMessage;
@@ -16,11 +16,10 @@ import java.nio.file.Paths;
 import static io.smallrye.mutiny.unchecked.Unchecked.function;
 import static org.apache.commons.lang3.StringUtils.isAnyBlank;
 
-@Pdf
 @ApplicationScoped
-public class PdfDocumentHandler implements DocumentReader, DocumentWriter, DocumentRemoval {
+public class DocumentService implements DocumentReader, DocumentWriter, DocumentRemoval {
 
-    @ConfigProperty(name = FSConfig.ROOT_DIRECTORY)
+    @ConfigProperty(name = RFSConfig.ROOT_DIRECTORY)
     String rootDirectory;
 
     @Inject

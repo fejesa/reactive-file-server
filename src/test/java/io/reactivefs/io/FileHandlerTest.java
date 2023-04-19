@@ -1,8 +1,7 @@
 package io.reactivefs.io;
 
-import io.reactivefs.FSConfig;
+import io.reactivefs.RFSConfig;
 import io.quarkus.test.junit.QuarkusTest;
-import io.reactivefs.io.FileHandler;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +21,7 @@ public class FileHandlerTest {
     @Inject
     FileHandler fileHandler;
 
-    @ConfigProperty(name = FSConfig.ROOT_DIRECTORY)
+    @ConfigProperty(name = RFSConfig.ROOT_DIRECTORY)
     String rootDirectory;
 
     @Test
