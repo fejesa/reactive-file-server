@@ -24,16 +24,15 @@ import static org.awaitility.Awaitility.await;
 @QuarkusTest
 class DocumentServiceTest {
 
-    @Pdf
     @Inject
-    DocumentService documentHandler;
+    DocumentService documentService;
 
     @ConfigProperty(name = RFSConfig.ROOT_DIRECTORY)
     String rootDirectory;
 
     @Test
     void invalidSingleFileRemovalError() {
-        var subscriber = documentHandler.remove(new DocumentRemoveMessage("", "", "fake.pdf"))
+        var subscriber = documentService.remove(new DocumentRemoveMessage("", "", "fake.pdf"))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.assertFailedWith(StringIndexOutOfBoundsException.class);
@@ -47,21 +46,21 @@ class DocumentServiceTest {
         var content = "payload";
         var payload = Base64.getEncoder().encodeToString(content.getBytes());
 
-        documentHandler.write(new DocumentCreateMessage(organizationId, userId, fileName, payload))
+        documentService.write(new DocumentCreateMessage(organizationId, userId, fileName, payload))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create())
             .awaitItem().assertCompleted();
-        documentHandler.read(new DocumentFileAccess(userId, organizationId, fileName)).subscribe()
+        documentService.read(new DocumentFileAccess(userId, organizationId, fileName)).subscribe()
             .withSubscriber(UniAssertSubscriber.create())
             .awaitItem().assertItem(Buffer.buffer(content.getBytes()));
 
-        documentHandler.remove(new DocumentRemoveMessage(organizationId, userId, fileName))
+        documentService.remove(new DocumentRemoveMessage(organizationId, userId, fileName))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create())
             .assertCompleted();
 
         await().atMost(Duration.ofSeconds(5)).until(() -> {
-            documentHandler.read(new DocumentFileAccess(userId, organizationId, fileName)).subscribe()
+            documentService.read(new DocumentFileAccess(userId, organizationId, fileName)).subscribe()
                 .withSubscriber(UniAssertSubscriber.create())
                 .awaitFailure().assertFailedWith(FileSystemException.class);
             return Boolean.TRUE;
@@ -70,7 +69,7 @@ class DocumentServiceTest {
 
     @Test
     void invalidDocumentNotToBeWritten() {
-        var subscriber = documentHandler.write(new DocumentCreateMessage("", "", "fake.pdf", "payload"))
+        var subscriber = documentService.write(new DocumentCreateMessage("", "", "fake.pdf", "payload"))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.assertFailedWith(IllegalArgumentException.class);
@@ -78,7 +77,7 @@ class DocumentServiceTest {
 
     @Test
     void invalidUserIdNotToBeWritten() {
-        var subscriber = documentHandler.write(new DocumentCreateMessage("orgCode", "1234", "fake.pdf", "payload"))
+        var subscriber = documentService.write(new DocumentCreateMessage("orgCode", "1234", "fake.pdf", "payload"))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.assertFailedWith(StringIndexOutOfBoundsException.class);
@@ -86,7 +85,7 @@ class DocumentServiceTest {
 
     @Test
     void invalidPayloadNotToBeWritten() {
-        var subscriber = documentHandler.write(new DocumentCreateMessage("orgCode", "123456", "fake.pdf", "cHJvc3RkZXY_YmxvZw=="))
+        var subscriber = documentService.write(new DocumentCreateMessage("orgCode", "123456", "fake.pdf", "cHJvc3RkZXY_YmxvZw=="))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.assertFailedWith(IllegalArgumentException.class);
@@ -97,7 +96,7 @@ class DocumentServiceTest {
         var payload = Base64.getEncoder().encodeToString("payload".getBytes());
         var createMessage = new DocumentCreateMessage("orgCode", "1234567", "fake.pdf", payload);
         IntStream.range(0, 2).forEach(__ -> {
-            documentHandler.write(createMessage)
+            documentService.write(createMessage)
                 .subscribe()
                 .withSubscriber(UniAssertSubscriber.create()).awaitItem().assertCompleted();
         });
@@ -106,7 +105,7 @@ class DocumentServiceTest {
     @Test
     void writeDocument() {
         var payload = Base64.getEncoder().encodeToString("payload".getBytes());
-        var subscriber = documentHandler.write(new DocumentCreateMessage("orgCode", "1234567", "fake.pdf", payload))
+        var subscriber = documentService.write(new DocumentCreateMessage("orgCode", "1234567", "fake.pdf", payload))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.awaitItem().assertCompleted();
@@ -114,7 +113,7 @@ class DocumentServiceTest {
 
     @Test
     void hasNoAccessToDocument() {
-        var subscriber = documentHandler.read(new DocumentFileAccess("", "", ""))
+        var subscriber = documentService.read(new DocumentFileAccess("", "", ""))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.assertFailedWith(IllegalArgumentException.class);
@@ -122,7 +121,7 @@ class DocumentServiceTest {
 
     @Test
     void documentFileDoesNotExist() {
-        var subscriber = documentHandler.read(new DocumentFileAccess("userId", "orgCode", "doesNotExist"))
+        var subscriber = documentService.read(new DocumentFileAccess("userId", "orgCode", "doesNotExist"))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.awaitFailure().assertFailedWith(FileSystemException.class);
@@ -138,7 +137,7 @@ class DocumentServiceTest {
         var tempFile = Files.createFile(path.resolve(fileName));
         try {
             Files.write(tempFile, "fake".getBytes());
-            var subscriber = documentHandler.read(new DocumentFileAccess(userId, organizationId, fileName))
+            var subscriber = documentService.read(new DocumentFileAccess(userId, organizationId, fileName))
                 .subscribe()
                 .withSubscriber(UniAssertSubscriber.create());
             subscriber.awaitItem().assertItem(Buffer.buffer("fake".getBytes()));
