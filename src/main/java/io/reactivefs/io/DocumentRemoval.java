@@ -9,13 +9,11 @@ import io.smallrye.mutiny.Uni;
 public interface DocumentRemoval {
 
     /**
-     * Clean up the requested document from the file storage.
-     * If a document or subfolder does not exist it is skipped by the process.
+     * Removes the requested document from the file storage.<p>
+     * If a document or subfolder does not exist then the process is skipped.
      *
-     * @param removeMessage contains the information about the file that should be deleted;
-     *                      for example organizationId and user id can be used for calculation of the subfolder where
-     *                      the given file stored
+     * @param message contains the information about the file that should be deleted
      * @return The lazy asynchronous action that the caller can subscribe to.
      */
-    Uni<Void> remove(DocumentRemoveMessage removeMessage);
+    Uni<Void> remove(DocumentRemoveMessage message);
 }

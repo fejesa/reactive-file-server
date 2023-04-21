@@ -19,7 +19,7 @@ import java.util.function.Function;
  * Reads and writes documents to the storage. All actions are blocking execution except the deletion.
  */
 @ApplicationScoped
-class FileHandler {
+class FileSystemHandler {
 
     private final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

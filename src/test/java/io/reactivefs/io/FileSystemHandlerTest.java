@@ -16,10 +16,10 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
-public class FileHandlerTest {
+public class FileSystemHandlerTest {
 
     @Inject
-    FileHandler fileHandler;
+    FileSystemHandler fileSystemHandler;
 
     @ConfigProperty(name = RFSConfig.ROOT_DIRECTORY)
     String rootDirectory;
@@ -33,7 +33,7 @@ public class FileHandlerTest {
         try {
             Files.write(tempFile, "fake".getBytes());
 
-            assertEquals(List.of(tempFile.toString()), fileHandler.getFiles(path));
+            assertEquals(List.of(tempFile.toString()), fileSystemHandler.getFiles(path));
         } finally {
             Files.delete(tempFile);
         }
@@ -42,7 +42,7 @@ public class FileHandlerTest {
 
     @Test
     void deleteFileDoesNotExist() {
-        assertDoesNotThrow(() -> fileHandler.delete(Paths.get("fileDoesNotExists")));
+        assertDoesNotThrow(() -> fileSystemHandler.delete(Paths.get("fileDoesNotExists")));
     }
 
     @Test
@@ -53,7 +53,7 @@ public class FileHandlerTest {
         var tempFile = Files.createFile(path.resolve(fileName));
         Files.write(tempFile, "fake".getBytes());
         assertTrue(Files.exists(tempFile));
-        fileHandler.delete(tempFile);
+        fileSystemHandler.delete(tempFile);
         await().atMost(Duration.ofMillis(500)).untilAsserted(() -> assertFalse(Files.exists(tempFile)));
     }
 }

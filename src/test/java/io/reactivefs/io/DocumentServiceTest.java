@@ -50,7 +50,7 @@ class DocumentServiceTest {
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create())
             .awaitItem().assertCompleted();
-        documentService.read(new DocumentFileAccess(userId, organizationId, fileName)).subscribe()
+        documentService.read(new DocumentFileAccess(organizationId, userId, fileName)).subscribe()
             .withSubscriber(UniAssertSubscriber.create())
             .awaitItem().assertItem(Buffer.buffer(content.getBytes()));
 
@@ -60,7 +60,7 @@ class DocumentServiceTest {
             .assertCompleted();
 
         await().atMost(Duration.ofSeconds(5)).until(() -> {
-            documentService.read(new DocumentFileAccess(userId, organizationId, fileName)).subscribe()
+            documentService.read(new DocumentFileAccess(organizationId, userId, fileName)).subscribe()
                 .withSubscriber(UniAssertSubscriber.create())
                 .awaitFailure().assertFailedWith(FileSystemException.class);
             return Boolean.TRUE;
@@ -121,7 +121,7 @@ class DocumentServiceTest {
 
     @Test
     void documentFileDoesNotExist() {
-        var subscriber = documentService.read(new DocumentFileAccess("userId", "orgCode", "doesNotExist"))
+        var subscriber = documentService.read(new DocumentFileAccess("orgCode", "userId", "doesNotExist"))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.awaitFailure().assertFailedWith(FileSystemException.class);
@@ -137,7 +137,7 @@ class DocumentServiceTest {
         var tempFile = Files.createFile(path.resolve(fileName));
         try {
             Files.write(tempFile, "fake".getBytes());
-            var subscriber = documentService.read(new DocumentFileAccess(userId, organizationId, fileName))
+            var subscriber = documentService.read(new DocumentFileAccess(organizationId, userId, fileName))
                 .subscribe()
                 .withSubscriber(UniAssertSubscriber.create());
             subscriber.awaitItem().assertItem(Buffer.buffer("fake".getBytes()));

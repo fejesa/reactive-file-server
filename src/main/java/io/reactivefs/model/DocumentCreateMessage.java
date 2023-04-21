@@ -1,10 +1,10 @@
 package io.reactivefs.model;
 
 /**
- * Defines the file creational message that contains the payload along with the owner and organization.
+ * Defines the file create message that contains the payload along with the owners of the document.
  *
- * @param organizationId The organization id that identifies the subfolder under the base storage.
- * @param userId Used for calculation of the subfolder under the organization folder.
+ * @param organizationId The organization id that identifies the organization level owner of the document.
+ * @param userId The user id is the user level owner of the document.
  * @param fileName The name of the file.
  * @param payload The payload in Base64 format.
  */

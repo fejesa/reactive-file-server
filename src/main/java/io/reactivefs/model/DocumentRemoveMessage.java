@@ -1,12 +1,10 @@
 package io.reactivefs.model;
 
-import org.apache.commons.lang3.StringUtils;
-
 /**
- * Defines the file removal message that contains all data for idetifying the file that should be deleted from the storage.
+ * Defines the file removal message that contains all data for identifying the file that should be deleted from the storage.
  *
- * @param organizationId The university code that identifies the subfolder under the base storage.
- * @param userId The user identifier that is used for calculation of the subfolder under the organization folder.
+ * @param organizationId The organization id that identifies the organization level owner of the document.
+ * @param userId The user id is the user level owner of the document.
  * @param fileName Name of the file that should be removed.
  */
 public record DocumentRemoveMessage(String organizationId, String userId, String fileName) {

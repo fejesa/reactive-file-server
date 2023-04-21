@@ -11,7 +11,7 @@ public interface DocumentReader {
 
     /**
      * Reads the given document from the storage that the downstream application can consume.<p>
-     * <i>Note:</i> we assume that the average size of the documents is acceptable and does not cause memory issues.
+     * @apiNote we assume that the average size of the documents is acceptable and does not cause memory issues.
      *
      * @param fileAccess contains the information that is used for the identification of the requested file
      * @return the file payload

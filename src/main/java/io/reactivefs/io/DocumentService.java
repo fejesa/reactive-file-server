@@ -23,13 +23,13 @@ public class DocumentService implements DocumentReader, DocumentWriter, Document
     String rootDirectory;
 
     @Inject
-    FileHandler fileHandler;
+    FileSystemHandler fileSystemHandler;
 
     @Override
-    public Uni<Void> remove(DocumentRemoveMessage removeMessage) {
-        return Uni.createFrom().item(removeMessage)
+    public Uni<Void> remove(DocumentRemoveMessage message) {
+        return Uni.createFrom().item(message)
             .map(function(this::toMessagePath))
-            .invoke(fileHandler::delete)
+            .invoke(fileSystemHandler::delete)
             .replaceWithVoid();
     }
 
@@ -37,15 +37,15 @@ public class DocumentService implements DocumentReader, DocumentWriter, Document
     public Uni<Buffer> read(DocumentFileAccess fileAccess) {
         return Uni.createFrom().item(fileAccess)
             .map(function(this::toMessagePath))
-            .map(fileHandler.readFile());
+            .map(fileSystemHandler.readFile());
     }
 
     @Override
     public Uni<Void> write(DocumentCreateMessage createMessage) {
         return Uni.createFrom().item(createMessage)
             .map(function(this::toFileMessage))
-            .invoke(fileHandler::createDirectories)
-            .invoke(fileHandler::writeFile)
+            .invoke(fileSystemHandler::createDirectories)
+            .invoke(fileSystemHandler::writeFile)
             .replaceWithVoid();
     }
 
