@@ -1,5 +1,6 @@
 package io.reactivefs.io;
 
+import io.smallrye.mutiny.Uni;
 import io.vertx.core.file.FileSystemException;
 import io.vertx.mutiny.core.Vertx;
 import io.vertx.mutiny.core.buffer.Buffer;
@@ -25,14 +26,9 @@ class FileSystemHandler {
 
     private final FileSystem fileSystem = Vertx.vertx().fileSystem();
 
-    public List<String> getFiles(Path path) {
+    public Uni<List<String>> getFiles(Path path) {
         logger.info("Folder read request: {}", path);
-        try {
-            return fileSystem.readDirAndAwait(path.toString());
-        } catch (FileSystemException fe) {
-            logger.warn("Cannot read directory: {}", path, fe);
-        }
-        return List.of();
+        return fileSystem.readDir(path.toString());
     }
 
     public void createDirectories(FileMessage fileMessage) {
