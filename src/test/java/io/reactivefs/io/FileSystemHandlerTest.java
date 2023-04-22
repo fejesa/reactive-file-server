@@ -76,7 +76,7 @@ public class FileSystemHandlerTest {
 
     @Test
     void deleteFileDoesNotExist() {
-        assertDoesNotThrow(() -> fileSystemHandler.delete(Paths.get("fileDoesNotExists")));
+        assertDoesNotThrow(() -> fileSystemHandler.deleteFile(Paths.get("fileDoesNotExists")));
     }
 
     @Test
@@ -84,7 +84,7 @@ public class FileSystemHandlerTest {
         var tempFile = createTempFile("orgCode", "sample.tmp");
         try {
             assertTrue(Files.exists(tempFile));
-            fileSystemHandler.delete(tempFile)
+            fileSystemHandler.deleteFile(tempFile)
                 .subscribe()
                 .withSubscriber(UniAssertSubscriber.create())
                 .awaitItem(Duration.ofMillis(500))

@@ -29,7 +29,7 @@ public class DocumentService implements DocumentReader, DocumentWriter, Document
     public Uni<Void> remove(DocumentRemoveRequest message) {
         return Uni.createFrom().item(message)
             .map(function(this::toMessagePath))
-            .invoke(fileSystemHandler::delete)
+            .invoke(fileSystemHandler::deleteFile)
             .replaceWithVoid();
     }
 

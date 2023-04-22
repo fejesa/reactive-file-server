@@ -53,7 +53,7 @@ class FileSystemHandler {
      *
      * @param path The file path that should be deleted.
      */
-    public Uni<Void> delete(Path path) {
+    public Uni<Void> deleteFile(Path path) {
         return Uni.createFrom().item(path).call(() -> {
             logger.info("File removal request: {}", path);
             return fileSystem.delete(path.toString());
