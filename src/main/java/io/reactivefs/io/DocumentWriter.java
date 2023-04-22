@@ -1,6 +1,6 @@
 package io.reactivefs.io;
 
-import io.reactivefs.model.DocumentCreateMessage;
+import io.reactivefs.model.DocumentCreateRequest;
 import io.smallrye.mutiny.Uni;
 
 /**
@@ -16,5 +16,5 @@ public interface DocumentWriter {
      * @throws io.vertx.core.file.FileSystemException if the file cannot be written to the storage
      * @throws IllegalArgumentException               if file parameter is invalid
      */
-    Uni<Void> write(DocumentCreateMessage message);
+    Uni<Void> write(DocumentCreateRequest message);
 }

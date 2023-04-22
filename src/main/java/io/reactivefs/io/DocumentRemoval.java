@@ -1,6 +1,6 @@
 package io.reactivefs.io;
 
-import io.reactivefs.model.DocumentRemoveMessage;
+import io.reactivefs.model.DocumentRemoveRequest;
 import io.smallrye.mutiny.Uni;
 
 /**
@@ -15,5 +15,5 @@ public interface DocumentRemoval {
      * @param message contains the information about the file that should be deleted
      * @return The lazy asynchronous action that the caller can subscribe to.
      */
-    Uni<Void> remove(DocumentRemoveMessage message);
+    Uni<Void> remove(DocumentRemoveRequest message);
 }

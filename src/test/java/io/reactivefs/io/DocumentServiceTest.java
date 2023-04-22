@@ -2,8 +2,8 @@ package io.reactivefs.io;
 
 import io.reactivefs.RFSConfig;
 import io.reactivefs.model.DocumentFileAccess;
-import io.reactivefs.model.DocumentCreateMessage;
-import io.reactivefs.model.DocumentRemoveMessage;
+import io.reactivefs.model.DocumentCreateRequest;
+import io.reactivefs.model.DocumentRemoveRequest;
 import io.quarkus.test.junit.QuarkusTest;
 import io.smallrye.mutiny.helpers.test.UniAssertSubscriber;
 import io.vertx.core.file.FileSystemException;
@@ -32,7 +32,7 @@ class DocumentServiceTest {
 
     @Test
     void invalidSingleFileRemovalError() {
-        var subscriber = documentService.remove(new DocumentRemoveMessage("", "", "fake.pdf"))
+        var subscriber = documentService.remove(new DocumentRemoveRequest("", "", "fake.pdf"))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.assertFailedWith(StringIndexOutOfBoundsException.class);
@@ -46,7 +46,7 @@ class DocumentServiceTest {
         var content = "payload";
         var payload = Base64.getEncoder().encodeToString(content.getBytes());
 
-        documentService.write(new DocumentCreateMessage(organizationId, userId, fileName, payload))
+        documentService.write(new DocumentCreateRequest(organizationId, userId, fileName, payload))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create())
             .awaitItem().assertCompleted();
@@ -54,7 +54,7 @@ class DocumentServiceTest {
             .withSubscriber(UniAssertSubscriber.create())
             .awaitItem().assertItem(Buffer.buffer(content.getBytes()));
 
-        documentService.remove(new DocumentRemoveMessage(organizationId, userId, fileName))
+        documentService.remove(new DocumentRemoveRequest(organizationId, userId, fileName))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create())
             .assertCompleted();
@@ -69,7 +69,7 @@ class DocumentServiceTest {
 
     @Test
     void invalidDocumentNotToBeWritten() {
-        var subscriber = documentService.write(new DocumentCreateMessage("", "", "fake.pdf", "payload"))
+        var subscriber = documentService.write(new DocumentCreateRequest("", "", "fake.pdf", "payload"))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.assertFailedWith(IllegalArgumentException.class);
@@ -77,7 +77,7 @@ class DocumentServiceTest {
 
     @Test
     void invalidUserIdNotToBeWritten() {
-        var subscriber = documentService.write(new DocumentCreateMessage("orgCode", "1234", "fake.pdf", "payload"))
+        var subscriber = documentService.write(new DocumentCreateRequest("orgCode", "1234", "fake.pdf", "payload"))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.assertFailedWith(StringIndexOutOfBoundsException.class);
@@ -85,7 +85,7 @@ class DocumentServiceTest {
 
     @Test
     void invalidPayloadNotToBeWritten() {
-        var subscriber = documentService.write(new DocumentCreateMessage("orgCode", "123456", "fake.pdf", "cHJvc3RkZXY_YmxvZw=="))
+        var subscriber = documentService.write(new DocumentCreateRequest("orgCode", "123456", "fake.pdf", "cHJvc3RkZXY_YmxvZw=="))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.assertFailedWith(IllegalArgumentException.class);
@@ -94,7 +94,7 @@ class DocumentServiceTest {
     @Test
     void sameDocumentOverridePrevious() {
         var payload = Base64.getEncoder().encodeToString("payload".getBytes());
-        var createMessage = new DocumentCreateMessage("orgCode", "1234567", "fake.pdf", payload);
+        var createMessage = new DocumentCreateRequest("orgCode", "1234567", "fake.pdf", payload);
         IntStream.range(0, 2).forEach(__ -> {
             documentService.write(createMessage)
                 .subscribe()
@@ -105,7 +105,7 @@ class DocumentServiceTest {
     @Test
     void writeDocument() {
         var payload = Base64.getEncoder().encodeToString("payload".getBytes());
-        var subscriber = documentService.write(new DocumentCreateMessage("orgCode", "1234567", "fake.pdf", payload))
+        var subscriber = documentService.write(new DocumentCreateRequest("orgCode", "1234567", "fake.pdf", payload))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.awaitItem().assertCompleted();

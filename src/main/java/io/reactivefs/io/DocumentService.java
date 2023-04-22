@@ -4,9 +4,9 @@ import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.core.buffer.Buffer;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import io.reactivefs.RFSConfig;
-import io.reactivefs.model.DocumentCreateMessage;
+import io.reactivefs.model.DocumentCreateRequest;
 import io.reactivefs.model.DocumentFileAccess;
-import io.reactivefs.model.DocumentRemoveMessage;
+import io.reactivefs.model.DocumentRemoveRequest;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -26,7 +26,7 @@ public class DocumentService implements DocumentReader, DocumentWriter, Document
     FileSystemHandler fileSystemHandler;
 
     @Override
-    public Uni<Void> remove(DocumentRemoveMessage message) {
+    public Uni<Void> remove(DocumentRemoveRequest message) {
         return Uni.createFrom().item(message)
             .map(function(this::toMessagePath))
             .invoke(fileSystemHandler::delete)
@@ -41,12 +41,13 @@ public class DocumentService implements DocumentReader, DocumentWriter, Document
     }
 
     @Override
-    public Uni<Void> write(DocumentCreateMessage createMessage) {
-        return Uni.createFrom().item(createMessage)
-            .map(function(this::toFileMessage))
-            .invoke(fileSystemHandler::createDirectories)
-            .invoke(fileSystemHandler::writeFile)
-            .replaceWithVoid();
+    public Uni<Void> write(DocumentCreateRequest createMessage) {
+        return null;
+//        return Uni.createFrom().item(createMessage)
+//            .map(function(this::toFileMessage))
+//            .invoke(fileSystemHandler::createDirectories)
+//            .invoke(fileSystemHandler::writeFile)
+//            .replaceWithVoid();
     }
 
     private Path toMessagePath(DocumentFileAccess fileAccess) {
@@ -56,15 +57,15 @@ public class DocumentService implements DocumentReader, DocumentWriter, Document
         return toMessagePath(fileAccess.organizationId(), fileAccess.userId(), fileAccess.fileName());
     }
 
-    private Path toMessagePath(DocumentRemoveMessage removeMessage) {
+    private Path toMessagePath(DocumentRemoveRequest removeMessage) {
         return toMessagePath(removeMessage.organizationId(), removeMessage.userId(), removeMessage.fileName());
     }
 
-    private FileMessage toFileMessage(DocumentCreateMessage fm) {
+    private FileContent toFileMessage(DocumentCreateRequest fm) {
         if (isAnyBlank(fm.organizationId(), fm.userId(), fm.fileName(), fm.payload())) {
             throw new IllegalArgumentException("Pdf message file cannot be written");
         }
-        return new FileMessage(toMessagePath(fm.organizationId(), fm.userId(), fm.fileName()), fm.payload());
+        return new FileContent(toMessagePath(fm.organizationId(), fm.userId(), fm.fileName()), fm.payload());
     }
 
     private Path toMessagePath(String organizationId, String userId, String fileName) {
