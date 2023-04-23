@@ -17,7 +17,7 @@ import java.util.function.Function;
  * Reads and writes documents to the storage.
  */
 @ApplicationScoped
-class FileSystemHandler {
+public class FileSystemHandler {
 
     private final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

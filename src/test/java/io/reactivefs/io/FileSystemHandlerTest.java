@@ -28,6 +28,8 @@ public class FileSystemHandlerTest {
     @ConfigProperty(name = RFSConfig.ROOT_DIRECTORY)
     String rootDirectory;
 
+    private final String organizationId = "orgCodeFSTest";
+
     @Test
     void getFileListWhenFolderDoesNotExist() {
         fileSystemHandler.getFiles(Paths.get("invalid"))
@@ -39,7 +41,6 @@ public class FileSystemHandlerTest {
 
     @Test
     void getFileListFromOrganizationDirectory() throws IOException {
-        var organizationId = "orgCode";
         var tempFile = createTempFile(organizationId, "sample.tmp");
         try {
             Files.write(tempFile, "fake".getBytes());
@@ -55,7 +56,7 @@ public class FileSystemHandlerTest {
 
     @Test
     void createOrganizationAndUserDirectory() {
-        var folder = Paths.get(rootDirectory, "orgdir", "userdir");
+        var folder = Paths.get(rootDirectory, organizationId, "userdir");
         fileSystemHandler.createDirectories(folder)
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create())
@@ -80,7 +81,7 @@ public class FileSystemHandlerTest {
 
     @Test
     void deleteExistingFile() throws IOException {
-        var tempFile = createTempFile("orgCode", "sample.tmp");
+        var tempFile = createTempFile(organizationId, "sample.tmp");
         try {
             assertTrue(Files.exists(tempFile));
             fileSystemHandler.deleteFile(tempFile)
@@ -96,7 +97,7 @@ public class FileSystemHandlerTest {
 
     @Test
     void writeValidContent() throws IOException {
-        var userFolder = createUserFolder("orgId", "userId");
+        var userFolder = createUserFolder(organizationId, "userId");
         var filePath = userFolder.resolve("validFile.tmp");
         try {
             fileSystemHandler.writeFile(new FileContent(filePath, "payload".getBytes()))
@@ -114,7 +115,6 @@ public class FileSystemHandlerTest {
     @Test
     void readExistFile() throws IOException {
         var userId = "userId";
-        var organizationId = "organizationId";
         var fileName = "userFile.tmp";
         var userFolder = Paths.get(rootDirectory, organizationId, userId);
         fileSystemHandler.createDirectories(userFolder)
