@@ -11,7 +11,6 @@ import javax.enterprise.context.ApplicationScoped;
 import java.lang.invoke.MethodHandles;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * Reads and writes documents to the storage.
@@ -78,10 +77,12 @@ public class FileSystemHandler {
                 });
     }
 
-    public Function<Path, Buffer> readFile() {
-        return path -> {
-            logger.info("File read request: {}", path);
-            return fileSystem.readFileBlocking(path.toString());
-        };
+    public Uni<Buffer> readFile(Path path) {
+        return Uni.createFrom().item(path)
+                .onItem()
+                .transformToUni(p -> {
+                    logger.info("File read request: {}", p);
+                    return fileSystem.readFile(p.toString());
+                });
     }
 }

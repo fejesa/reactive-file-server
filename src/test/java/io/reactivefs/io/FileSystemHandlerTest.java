@@ -130,7 +130,11 @@ public class FileSystemHandlerTest {
                 .withSubscriber(UniAssertSubscriber.create())
                 .awaitItem(Duration.ofMillis(500))
                 .assertCompleted();
-            assertEquals(Buffer.buffer("content".getBytes()), fileSystemHandler.readFile().apply(filePath));
+            fileSystemHandler.readFile(filePath)
+                .subscribe()
+                .withSubscriber(UniAssertSubscriber.create())
+                .awaitItem(Duration.ofMillis(500))
+                .assertItem(Buffer.buffer("content".getBytes()));
         } finally {
             Files.delete(filePath);
         }

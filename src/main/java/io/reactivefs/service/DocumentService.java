@@ -39,7 +39,8 @@ public class DocumentService implements DocumentReader, DocumentWriter, Document
     public Uni<Buffer> read(DocumentFileAccess fileAccess) {
         return Uni.createFrom().item(fileAccess)
             .map(function(this::documentPath))
-            .map(fileSystemHandler.readFile());
+            .onItem()
+                .transformToUni(fileSystemHandler::readFile);
     }
 
     @Override
