@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import javax.enterprise.context.ApplicationScoped;
 import java.lang.invoke.MethodHandles;
 import java.nio.file.Path;
-import java.util.Base64;
 import java.util.List;
 import java.util.function.Function;
 
@@ -33,9 +32,9 @@ class FileSystemHandler {
         return Uni.createFrom().item(path)
                 .onItem()
                 .transformToUni(p -> {
-                    logger.info("Folder read request: {}", path);
-                    return fileSystem.readDir(path.toString());
-        });
+                    logger.info("Folder read request: {}", p);
+                    return fileSystem.readDir(p.toString());
+                });
     }
 
     /**
@@ -54,28 +53,29 @@ class FileSystemHandler {
      * @param path The file path that should be deleted.
      */
     public Uni<Void> deleteFile(Path path) {
-        return Uni.createFrom().item(path).call(() -> {
-            logger.info("File removal request: {}", path);
-            return fileSystem.delete(path.toString());
-        }).replaceWithVoid();
+        return Uni.createFrom().item(path)
+                .onItem()
+                .transformToUni(p -> {
+                    logger.info("File removal request: {}", p);
+                    return fileSystem.delete(p.toString());
+                });
     }
 
     /**
      * This function creates the given file at the specified path and writes the provided content to it.
      * If the file already exists at that path, it will be replaced with the new content.
-     * The content should be in Base64 format and will be decoded and written to the file.
      *
      * @param fileContent Contains the file path and its content that should be written out to the storage.
      * @return The asynchronous result of the operation when completed, or a failure if the operation failed.
-     * @throws IllegalArgumentException if the message is not Base64 format
      * @see FileSystem#writeFile
      */
     public Uni<Void> writeFile(FileContent fileContent) {
-        return Uni.createFrom().item(fileContent).call(() -> {
-            logger.info("File write request to path: {}", fileContent.path());
-            var buffer = Buffer.buffer(Base64.getDecoder().decode(fileContent.content()));
-            return fileSystem.writeFile(fileContent.path().toString(), buffer);
-        }).replaceWithVoid();
+        return Uni.createFrom().item(fileContent)
+                .onItem()
+                .transformToUni(fc -> {
+                    logger.info("File write request to path: {}", fc.path());
+                    return fileSystem.writeFile(fc.path().toString(), Buffer.buffer(fc.content()));
+                });
     }
 
     public Function<Path, Buffer> readFile() {

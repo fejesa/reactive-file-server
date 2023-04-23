@@ -65,7 +65,7 @@ public class DocumentService implements DocumentReader, DocumentWriter, Document
         if (isAnyBlank(fm.organizationId(), fm.userId(), fm.fileName(), fm.payload())) {
             throw new IllegalArgumentException("Pdf message file cannot be written");
         }
-        return new FileContent(toMessagePath(fm.organizationId(), fm.userId(), fm.fileName()), fm.payload());
+        return new FileContent(toMessagePath(fm.organizationId(), fm.userId(), fm.fileName()), fm.payload().getBytes());
     }
 
     private Path toMessagePath(String organizationId, String userId, String fileName) {

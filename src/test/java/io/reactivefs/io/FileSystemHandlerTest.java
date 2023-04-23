@@ -15,7 +15,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
-import java.util.Base64;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -96,22 +95,11 @@ public class FileSystemHandlerTest {
     }
 
     @Test
-    void invalidContentIsNotWritten() throws IOException {
-        var path = createUserFolder("orgId", "userId");
-        fileSystemHandler.writeFile(new FileContent(path, "cHJvc3RkZXY_YmxvZw=="))
-            .subscribe()
-            .withSubscriber(UniAssertSubscriber.create())
-            .awaitFailure(Duration.ofMillis(500))
-            .assertFailedWith(IllegalArgumentException.class);
-    }
-
-    @Test
     void writeValidContent() throws IOException {
         var userFolder = createUserFolder("orgId", "userId");
         var filePath = userFolder.resolve("validFile.tmp");
         try {
-            var content = Base64.getEncoder().encodeToString("payload".getBytes());
-            fileSystemHandler.writeFile(new FileContent(filePath, content))
+            fileSystemHandler.writeFile(new FileContent(filePath, "payload".getBytes()))
                 .subscribe()
                 .withSubscriber(UniAssertSubscriber.create())
                 .awaitItem(Duration.ofMillis(500))
@@ -137,8 +125,7 @@ public class FileSystemHandlerTest {
 
         var filePath = userFolder.resolve(fileName);
         try {
-            var content = Base64.getEncoder().encodeToString("content".getBytes());
-            fileSystemHandler.writeFile(new FileContent(filePath, content))
+            fileSystemHandler.writeFile(new FileContent(filePath, "content".getBytes()))
                 .subscribe()
                 .withSubscriber(UniAssertSubscriber.create())
                 .awaitItem(Duration.ofMillis(500))
