@@ -1,4 +1,4 @@
-package io.reactivefs.io;
+package io.reactivefs.service;
 
 import javax.inject.Qualifier;
 import java.lang.annotation.Retention;

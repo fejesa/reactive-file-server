@@ -1,7 +1,6 @@
 package io.reactivefs.service;
 
 import io.quarkus.test.junit.QuarkusTest;
-import io.reactivefs.io.UserDocument;
 import io.reactivefs.model.DocumentCreateRequest;
 import io.reactivefs.model.DocumentFileAccess;
 import io.reactivefs.model.DocumentRemoveRequest;
@@ -16,17 +15,17 @@ import java.util.Base64;
 import java.util.stream.IntStream;
 
 @QuarkusTest
-class DocumentServiceTest {
+class UserDocumentStoreTest {
 
     @UserDocument
     @Inject
-    DocumentService documentService;
+    UserDocumentStore userDocumentStore;
 
     private final String organizationId = "orgCodeDocumentServiceTest";
 
     @Test
     void invalidSingleFileRemovalError() {
-        var subscriber = documentService.remove(new DocumentRemoveRequest("", "", "fake.tmp"))
+        var subscriber = userDocumentStore.remove(new DocumentRemoveRequest("", "", "fake.tmp"))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.assertFailedWith(StringIndexOutOfBoundsException.class);
@@ -40,25 +39,25 @@ class DocumentServiceTest {
         var payload = Base64.getEncoder().encodeToString(content.getBytes());
 
         // Given a document
-        documentService.write(new DocumentCreateRequest(organizationId, userId, fileName, payload))
+        userDocumentStore.write(new DocumentCreateRequest(organizationId, userId, fileName, payload))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create())
             .awaitItem(Duration.ofMillis(500))
             .assertCompleted();
-        documentService.read(new DocumentFileAccess(organizationId, userId, fileName)).subscribe()
+        userDocumentStore.read(new DocumentFileAccess(organizationId, userId, fileName)).subscribe()
             .withSubscriber(UniAssertSubscriber.create())
             .awaitItem()
             .assertItem(Buffer.buffer(content.getBytes()));
 
         // When the document is removed
-        documentService.remove(new DocumentRemoveRequest(organizationId, userId, fileName))
+        userDocumentStore.remove(new DocumentRemoveRequest(organizationId, userId, fileName))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create())
             .awaitItem(Duration.ofMillis(500))
             .assertCompleted();
 
         // Then it should not be accessed
-        documentService.read(new DocumentFileAccess(organizationId, userId, fileName)).subscribe()
+        userDocumentStore.read(new DocumentFileAccess(organizationId, userId, fileName)).subscribe()
             .withSubscriber(UniAssertSubscriber.create())
             .awaitFailure(Duration.ofMillis(500))
             .assertFailedWith(FileSystemException.class);
@@ -66,7 +65,7 @@ class DocumentServiceTest {
 
     @Test
     void invalidDocumentNotToBeWritten() {
-        var subscriber = documentService.write(new DocumentCreateRequest("", "", "fake.pdf", "payload"))
+        var subscriber = userDocumentStore.write(new DocumentCreateRequest("", "", "fake.pdf", "payload"))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.assertFailedWith(IllegalArgumentException.class);
@@ -74,7 +73,7 @@ class DocumentServiceTest {
 
     @Test
     void invalidUserIdNotToBeWritten() {
-        var subscriber = documentService.write(new DocumentCreateRequest(organizationId, "1234", "fake.pdf", "payload"))
+        var subscriber = userDocumentStore.write(new DocumentCreateRequest(organizationId, "1234", "fake.pdf", "payload"))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.assertFailedWith(StringIndexOutOfBoundsException.class);
@@ -82,7 +81,7 @@ class DocumentServiceTest {
 
     @Test
     void invalidPayloadNotToBeWritten() {
-        var subscriber = documentService.write(new DocumentCreateRequest(organizationId, "123456", "fake.pdf", "cHJvc3RkZXY_YmxvZw=="))
+        var subscriber = userDocumentStore.write(new DocumentCreateRequest(organizationId, "123456", "fake.pdf", "cHJvc3RkZXY_YmxvZw=="))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.assertFailedWith(IllegalArgumentException.class);
@@ -96,12 +95,12 @@ class DocumentServiceTest {
             var userId = "1234567";
             var fileName = "fake.tmp";
             var createMessage = new DocumentCreateRequest(organizationId, userId, fileName, payload);
-            documentService.write(createMessage)
+            userDocumentStore.write(createMessage)
                 .subscribe()
                 .withSubscriber(UniAssertSubscriber.create())
                 .awaitItem(Duration.ofMillis(500))
                 .assertCompleted();
-            documentService.read(new DocumentFileAccess(organizationId, userId, fileName)).subscribe()
+            userDocumentStore.read(new DocumentFileAccess(organizationId, userId, fileName)).subscribe()
                 .withSubscriber(UniAssertSubscriber.create())
                 .awaitItem()
                 .assertItem(Buffer.buffer(content.getBytes()));
@@ -110,7 +109,7 @@ class DocumentServiceTest {
 
     @Test
     void hasNoAccessToDocument() {
-        var subscriber = documentService.read(new DocumentFileAccess("", "", ""))
+        var subscriber = userDocumentStore.read(new DocumentFileAccess("", "", ""))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.assertFailedWith(IllegalArgumentException.class);
@@ -118,7 +117,7 @@ class DocumentServiceTest {
 
     @Test
     void documentFileDoesNotExist() {
-        var subscriber = documentService.read(new DocumentFileAccess(organizationId, "userId", "doesNotExist"))
+        var subscriber = userDocumentStore.read(new DocumentFileAccess(organizationId, "userId", "doesNotExist"))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.awaitFailure().assertFailedWith(FileSystemException.class);

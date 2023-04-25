@@ -1,4 +1,4 @@
-package io.reactivefs.io;
+package io.reactivefs.service;
 
 import java.nio.file.Path;
 

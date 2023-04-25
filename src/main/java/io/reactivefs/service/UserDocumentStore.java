@@ -18,7 +18,7 @@ import static org.apache.commons.lang3.StringUtils.isAnyBlank;
 
 @UserDocument
 @ApplicationScoped
-public class DocumentService implements DocumentReader, DocumentWriter, DocumentRemoval {
+public class UserDocumentStore implements DocumentStore, DocumentRemoval {
 
     @Inject
     FileSystemHandler fileSystemHandler;

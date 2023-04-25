@@ -1,4 +1,4 @@
-package io.reactivefs.io;
+package io.reactivefs.service;
 
 import io.reactivefs.RFSConfig;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
