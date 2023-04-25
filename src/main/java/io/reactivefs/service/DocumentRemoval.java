@@ -1,4 +1,4 @@
-package io.reactivefs.io;
+package io.reactivefs.service;
 
 import io.reactivefs.model.DocumentRemoveRequest;
 import io.smallrye.mutiny.Uni;
