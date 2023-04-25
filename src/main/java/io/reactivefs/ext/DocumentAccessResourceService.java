@@ -28,7 +28,7 @@ public interface DocumentAccessResourceService {
      */
     @GET
     @Path("document/{documentId}")
-    Uni<DocumentFileAccess> getDocumentAccess(@HeaderParam(TOKEN_HEADER) String token, @PathParam("document") Long documentId);
+    Uni<DocumentFileAccess> getUserDocumentAccess(@HeaderParam(TOKEN_HEADER) String token, @PathParam("document") Long documentId);
 
     /**
      * Validates the provided apiKey sent by the application.
