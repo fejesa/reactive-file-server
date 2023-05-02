@@ -59,9 +59,9 @@ public class DocumentFileAccessResource {
             @Parameter(description = "Signed token in Base 64 format that used for identification of the user")
             @NotNull
             @HeaderParam(TOKEN_HEADER) String token,
-            @Parameter(description = "Identifier of the requested message document")
-            @PathParam("documentId") Long messageId) {
-        return readFile(token, messageId, fileAccessService::getUserDocumentAccess, documentStore);
+            @Parameter(description = "Identifier of the requested document")
+            @PathParam("documentId") Long documentId) {
+        return readFile(token, documentId, fileAccessService::getUserDocumentAccess, documentStore);
     }
 
     /**

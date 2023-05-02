@@ -29,11 +29,11 @@ public class FileSystemHandler {
      */
     public Uni<List<String>> getFiles(Path path) {
         return Uni.createFrom().item(path)
-                .onItem()
-                .transformToUni(p -> {
-                    logger.info("Folder read request: {}", p);
-                    return fileSystem.readDir(p.toString());
-                });
+            .onItem()
+            .transformToUni(p -> {
+                logger.info("Folder read request: {}", p);
+                return fileSystem.readDir(p.toString());
+            });
     }
 
     /**
@@ -53,11 +53,11 @@ public class FileSystemHandler {
      */
     public Uni<Void> deleteFile(Path path) {
         return Uni.createFrom().item(path)
-                .onItem()
-                .transformToUni(p -> {
-                    logger.info("File removal request: {}", p);
-                    return fileSystem.delete(p.toString());
-                });
+            .onItem()
+            .transformToUni(p -> {
+                logger.info("File removal request: {}", p);
+                return fileSystem.delete(p.toString());
+            });
     }
 
     /**
@@ -70,19 +70,26 @@ public class FileSystemHandler {
      */
     public Uni<Void> writeFile(FileContent fileContent) {
         return Uni.createFrom().item(fileContent)
-                .onItem()
-                .transformToUni(fc -> {
-                    logger.info("File write request to path: {}", fc.path());
-                    return fileSystem.writeFile(fc.path().toString(), Buffer.buffer(fc.content()));
-                });
+            .onItem()
+            .transformToUni(fc -> {
+                logger.info("File write request to path: {}", fc.path());
+                return fileSystem.writeFile(fc.path().toString(), Buffer.buffer(fc.content()));
+            });
     }
 
+    /**
+     * Reads all the bytes from a given file.
+     * <p>Note that this method is intended for simple cases where it is convenient to read all bytes into a byte array.
+     * It is not intended for reading in large files.
+     * @param path The path to the file.
+     * @return a byte buffer containing the bytes read from the file
+     */
     public Uni<Buffer> readFile(Path path) {
         return Uni.createFrom().item(path)
-                .onItem()
-                .transformToUni(p -> {
-                    logger.info("File read request: {}", p);
-                    return fileSystem.readFile(p.toString());
-                });
+            .onItem()
+            .transformToUni(p -> {
+                logger.info("File read request: {}", p);
+                return fileSystem.readFile(p.toString());
+            });
     }
 }

@@ -35,7 +35,7 @@ class UserDocumentStoreTest {
     void documentBeRemoved() {
         var userId = "9999999";
         var fileName = "fakeForRemoval.tmp";
-        var content = "payload";
+        var content = "content";
         var payload = Base64.getEncoder().encodeToString(content.getBytes());
 
         // Given a document
@@ -65,7 +65,7 @@ class UserDocumentStoreTest {
 
     @Test
     void invalidDocumentNotToBeWritten() {
-        var subscriber = userDocumentStore.write(new DocumentCreateRequest("", "", "fake.pdf", "payload"))
+        var subscriber = userDocumentStore.write(new DocumentCreateRequest("", "", "fake.pdf", "content"))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.assertFailedWith(IllegalArgumentException.class);
@@ -73,7 +73,7 @@ class UserDocumentStoreTest {
 
     @Test
     void invalidUserIdNotToBeWritten() {
-        var subscriber = userDocumentStore.write(new DocumentCreateRequest(organizationId, "1234", "fake.pdf", "payload"))
+        var subscriber = userDocumentStore.write(new DocumentCreateRequest(organizationId, "1234", "fake.pdf", "content"))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.assertFailedWith(StringIndexOutOfBoundsException.class);
@@ -90,12 +90,12 @@ class UserDocumentStoreTest {
     @Test
     void sameDocumentOverrideThePreviousOne() {
         IntStream.range(0, 2).forEach(i -> {
-            var content = "payload" + i;
+            var content = "content" + i;
             var payload = Base64.getEncoder().encodeToString(content.getBytes());
             var userId = "1234567";
             var fileName = "fake.tmp";
-            var createMessage = new DocumentCreateRequest(organizationId, userId, fileName, payload);
-            userDocumentStore.write(createMessage)
+            var documentCreateRequest = new DocumentCreateRequest(organizationId, userId, fileName, payload);
+            userDocumentStore.write(documentCreateRequest)
                 .subscribe()
                 .withSubscriber(UniAssertSubscriber.create())
                 .awaitItem(Duration.ofMillis(500))

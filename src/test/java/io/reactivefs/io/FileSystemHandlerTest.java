@@ -100,13 +100,13 @@ public class FileSystemHandlerTest {
         var userFolder = createUserFolder(organizationId, "userId");
         var filePath = userFolder.resolve("validFile.tmp");
         try {
-            fileSystemHandler.writeFile(new FileContent(filePath, "payload".getBytes()))
+            fileSystemHandler.writeFile(new FileContent(filePath, "content".getBytes()))
                 .subscribe()
                 .withSubscriber(UniAssertSubscriber.create())
                 .awaitItem(Duration.ofMillis(500))
                 .assertCompleted();
             assertTrue(Files.exists(filePath));
-            assertEquals("payload", Files.readString(filePath));
+            assertEquals("content", Files.readString(filePath));
         } finally {
             removeFile(filePath);
         }
