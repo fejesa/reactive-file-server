@@ -64,6 +64,9 @@ public class DocumentFileAccessResource {
         description = "The document content in binary format",
         content = @Content(mediaType = "application/octet-stream"))
     @APIResponse(
+        responseCode = "400",
+        description = "If the Token is missing from the header")
+    @APIResponse(
         responseCode = "404",
         description = "If the requested document is not found, or the user has no authorization to access that resource")
     @GET
