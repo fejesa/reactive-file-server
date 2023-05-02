@@ -8,6 +8,10 @@ import io.reactivefs.RFSConfig;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.vertx.mutiny.core.buffer.Buffer;
+import jakarta.inject.Inject;
+import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -15,10 +19,6 @@ import org.jboss.resteasy.reactive.RestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import java.lang.invoke.MethodHandles;
 import java.time.Duration;
 import java.util.function.BiFunction;
@@ -60,7 +60,7 @@ public class DocumentFileAccessResource {
             @NotNull
             @HeaderParam(TOKEN_HEADER) String token,
             @Parameter(description = "Identifier of the requested message document")
-            @PathParam("messageId") Long messageId) {
+            @PathParam("documentId") Long messageId) {
         return readFile(token, messageId, fileAccessService::getUserDocumentAccess, documentStore);
     }
 

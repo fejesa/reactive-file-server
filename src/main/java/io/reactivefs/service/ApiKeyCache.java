@@ -4,11 +4,11 @@ import io.reactivefs.RFSConfig;
 import io.reactivefs.ext.DocumentAccessResourceService;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.unchecked.Unchecked;
+import jakarta.enterprise.context.ApplicationScoped;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
-import javax.enterprise.context.ApplicationScoped;
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicReference;
 

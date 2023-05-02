@@ -7,9 +7,9 @@ import io.reactivefs.model.DocumentRemoveRequest;
 import io.smallrye.mutiny.helpers.test.UniAssertSubscriber;
 import io.vertx.core.file.FileSystemException;
 import io.vertx.mutiny.core.buffer.Buffer;
+import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
 import java.time.Duration;
 import java.util.Base64;
 import java.util.stream.IntStream;

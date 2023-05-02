@@ -2,10 +2,10 @@ package io.reactivefs.ext;
 
 import io.reactivefs.model.DocumentFileAccess;
 import io.smallrye.mutiny.Uni;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 
 /**
  * Delegates REST calls to the document access checker service (ACL).<p>
@@ -28,7 +28,7 @@ public interface DocumentAccessResourceService {
      */
     @GET
     @Path("document/{documentId}")
-    Uni<DocumentFileAccess> getUserDocumentAccess(@HeaderParam(TOKEN_HEADER) String token, @PathParam("document") Long documentId);
+    Uni<DocumentFileAccess> getUserDocumentAccess(@HeaderParam(TOKEN_HEADER) String token, @PathParam("documentId") Long documentId);
 
     /**
      * Validates the provided apiKey sent by the application.

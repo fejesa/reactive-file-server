@@ -5,11 +5,11 @@ import io.reactivefs.RFSConfig;
 import io.smallrye.mutiny.helpers.test.UniAssertSubscriber;
 import io.vertx.core.file.FileSystemException;
 import io.vertx.mutiny.core.buffer.Buffer;
+import jakarta.inject.Inject;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

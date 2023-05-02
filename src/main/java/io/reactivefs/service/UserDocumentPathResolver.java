@@ -1,9 +1,9 @@
 package io.reactivefs.service;
 
 import io.reactivefs.RFSConfig;
+import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import javax.enterprise.context.ApplicationScoped;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
