@@ -25,8 +25,11 @@ public class FileSystemHandlerTest {
     @Inject
     FileSystemHandler fileSystemHandler;
 
-    @ConfigProperty(name = RFSConfig.ROOT_DIRECTORY)
-    String rootDirectory;
+    @ConfigProperty(name = RFSConfig.USER_DOCUMENT_ROOT_DIRECTORY)
+    String userDirectory;
+
+    @ConfigProperty(name = RFSConfig.ORGANIZATION_DOCUMENT_ROOT_DIRECTORY)
+    String organizationDirectory;
 
     private final String organizationId = "orgCodeFSTest";
 
@@ -41,10 +44,10 @@ public class FileSystemHandlerTest {
 
     @Test
     void getFileListFromOrganizationDirectory() throws IOException {
-        var tempFile = createTempFile(organizationId, "sample.tmp");
+        var tempFile = createOrgTempFile(organizationId, "sample.tmp");
         try {
             Files.write(tempFile, "fake".getBytes());
-            fileSystemHandler.getFiles(createOrganizationFolder(organizationId))
+            fileSystemHandler.getFiles(createOrgFolder(organizationId))
                 .subscribe()
                 .withSubscriber(UniAssertSubscriber.create())
                 .awaitItem(Duration.ofMillis(500))
@@ -55,8 +58,8 @@ public class FileSystemHandlerTest {
     }
 
     @Test
-    void createOrganizationAndUserDirectory() {
-        var folder = Paths.get(rootDirectory, organizationId, "userdir");
+    void createUserDirectory() {
+        var folder = Paths.get(userDirectory, organizationId, "userdir");
         fileSystemHandler.createDirectories(folder)
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create())
@@ -66,7 +69,7 @@ public class FileSystemHandlerTest {
 
     @Test
     void whenDirectoryExistsNotToThrowException() throws IOException {
-        var path = createUserFolder("createOrgFolderBeforeTryAgain", "userId");
+        var path = createUserFolder("createUserOrgFolderBeforeTryAgain", "userId");
         fileSystemHandler.createDirectories(path)
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create())
@@ -81,7 +84,7 @@ public class FileSystemHandlerTest {
 
     @Test
     void deleteExistingFile() throws IOException {
-        var tempFile = createTempFile(organizationId, "sample.tmp");
+        var tempFile = createOrgTempFile(organizationId, "sample.tmp");
         try {
             assertTrue(Files.exists(tempFile));
             fileSystemHandler.deleteFile(tempFile)
@@ -116,7 +119,7 @@ public class FileSystemHandlerTest {
     void readExistFile() throws IOException {
         var userId = "userId";
         var fileName = "userFile.tmp";
-        var userFolder = Paths.get(rootDirectory, organizationId, userId);
+        var userFolder = Paths.get(userDirectory, organizationId, userId);
         fileSystemHandler.createDirectories(userFolder)
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create())
@@ -140,16 +143,20 @@ public class FileSystemHandlerTest {
         }
     }
 
-    private Path createTempFile(String organizationId, String fileName) throws IOException {
-        return Files.createFile(createOrganizationFolder(organizationId).resolve(fileName));
+    private Path createOrgTempFile(String organizationId, String fileName) throws IOException {
+        return Files.createFile(createOrgFolder(organizationId).resolve(fileName));
     }
 
-    private Path createOrganizationFolder(String organizationId) throws IOException {
-        return Files.createDirectories(Paths.get(rootDirectory, organizationId.toLowerCase()));
+    private Path createOrgFolder(String organizationId) throws IOException {
+        return Files.createDirectories(Paths.get(organizationDirectory, organizationId.toLowerCase()));
+    }
+
+    private Path createUserFolder(String organizationId) throws IOException {
+        return Files.createDirectories(Paths.get(userDirectory, organizationId.toLowerCase()));
     }
 
     private Path createUserFolder(String organizationId, String userId) throws IOException {
-        return Files.createDirectories(Paths.get(rootDirectory, organizationId.toLowerCase(), userId));
+        return Files.createDirectories(Paths.get(userDirectory, organizationId.toLowerCase(), userId));
     }
 
     private void removeFile(Path path) {

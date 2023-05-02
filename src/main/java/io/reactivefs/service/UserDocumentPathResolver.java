@@ -11,8 +11,8 @@ import java.nio.file.Paths;
 @ApplicationScoped
 public class UserDocumentPathResolver implements DocumentPathResolver {
 
-    @ConfigProperty(name = RFSConfig.ROOT_DIRECTORY)
-    String rootDirectory;
+    @ConfigProperty(name = RFSConfig.USER_DOCUMENT_ROOT_DIRECTORY)
+    String userDocumentRootDirectory;
 
     /**
      * Suppose the user ID is a fixed length of 7 characters, such as 2312345, and instead of creating
@@ -21,6 +21,6 @@ public class UserDocumentPathResolver implements DocumentPathResolver {
      */
     @Override
     public Path resolve(String organizationId, String userId, String fileName) {
-        return Paths.get(rootDirectory, organizationId.toLowerCase(), userId.toLowerCase().substring(5), fileName);
+        return Paths.get(userDocumentRootDirectory, organizationId.toLowerCase(), userId.toLowerCase().substring(5), fileName);
     }
 }

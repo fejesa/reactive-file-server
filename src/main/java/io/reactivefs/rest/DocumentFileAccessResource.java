@@ -106,7 +106,7 @@ public class DocumentFileAccessResource {
     }
 
     private Uni<RestResponse<byte[]>> logAndEmpty(Throwable failure) {
-        logger.error("User file access error", failure);
+        logger.error("Document file access error", failure);
         return Uni.createFrom()
                 .item(RestResponse.ResponseBuilder.ok(Buffer.buffer().getBytes()).status(RestResponse.Status.NOT_FOUND).build());
     }
