@@ -33,7 +33,7 @@ public class UserDocumentStoreTest {
 
     @Test
     void whenInvalidSingleFileRemovalRequestShouldFail() {
-        var subscriber = documentStore.remove(new DocumentRemoveRequest("", "", "fake.pdf"))
+        var subscriber = documentStore.remove(new DocumentRemoveRequest("", "", "fake.tmp"))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.assertFailedWith(StringIndexOutOfBoundsException.class);
@@ -43,7 +43,7 @@ public class UserDocumentStoreTest {
     void whenDocumentShouldBeRemoved() {
         var organizationId = "orgId";
         var userId = "9999999";
-        var fileName = "fakeForRemoval.pdf";
+        var fileName = "fakeForRemoval.tmp";
         var content = "payload";
         var payload = Base64.getEncoder().encodeToString(content.getBytes());
 
@@ -71,7 +71,7 @@ public class UserDocumentStoreTest {
 
     @Test
     void whenNotEncodedThenUserDocumentShouldNotBeWritten() {
-        var subscriber = documentStore.write(new DocumentCreateRequest("", "", "fake.pdf", "payload"))
+        var subscriber = documentStore.write(new DocumentCreateRequest("", "", "fake.tmp", "payload"))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.assertFailedWith(IllegalArgumentException.class);
@@ -79,7 +79,7 @@ public class UserDocumentStoreTest {
 
     @Test
     void whenInvalidUserIdThenUserDocumentShouldNotBeWritten() {
-        var subscriber = documentStore.write(new DocumentCreateRequest("orgId", "1234", "fake.pdf", "payload"))
+        var subscriber = documentStore.write(new DocumentCreateRequest("orgId", "1234", "fake.tmp", "payload"))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.assertFailedWith(StringIndexOutOfBoundsException.class);
@@ -87,16 +87,16 @@ public class UserDocumentStoreTest {
 
     @Test
     void whenInvalidEncodedContentShouldNotBeWritten() {
-        var subscriber = documentStore.write(new DocumentCreateRequest("orgId", "123456", "fake.pdf", "cHJvc3RkZXY_YmxvZw=="))
+        var subscriber = documentStore.write(new DocumentCreateRequest("orgId", "123456", "fake.tmp", "cHJvc3RkZXY_YmxvZw=="))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.assertFailedWith(IllegalArgumentException.class);
     }
 
     @Test
-    void whenSameDocumentShouldOverridePrevious() {
+    void whenSameDocumentShouldOverrideThePrevious() {
         var payload = Base64.getEncoder().encodeToString("payload".getBytes());
-        var createRequest = new DocumentCreateRequest("orgId", "1234567", "fake.pdf", payload);
+        var createRequest = new DocumentCreateRequest("orgId", "1234567", "fake.tmp", payload);
         IntStream.range(0, 2).forEach(__ -> {
             documentStore.write(createRequest)
                 .subscribe()
@@ -107,7 +107,7 @@ public class UserDocumentStoreTest {
     @Test
     void whenUserDocumentShouldBeWritten() {
         var payload = Base64.getEncoder().encodeToString("payload".getBytes());
-        var subscriber = documentStore.write(new DocumentCreateRequest("orgId", "1234567", "fake.pdf", payload))
+        var subscriber = documentStore.write(new DocumentCreateRequest("orgId", "1234567", "fake.tmp", payload))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
         subscriber.awaitItem().assertCompleted();
@@ -134,7 +134,7 @@ public class UserDocumentStoreTest {
         var userId = "1267890";
         var userDir = userId.substring(5);
         var organizationId = "orgId";
-        var fileName = "message.pdf";
+        var fileName = "message.tmp";
         var path = Files.createDirectories(Paths.get(userDocumentDirectory, organizationId.toLowerCase(), userDir));
         var tempFile = Files.createFile(path.resolve(fileName));
         try {

@@ -46,7 +46,7 @@ public class AttachmentDocumentStore implements DocumentStore {
     }
 
     private Path attachmentPath(DocumentFileAccess fileAccess) {
-        if (isAnyBlank(fileAccess.organizationId(), fileAccess.userId(), fileAccess.fileName())) {
+        if (isAnyBlank(fileAccess.organizationId(), fileAccess.fileName())) {
             throw new IllegalArgumentException("Attachment document file cannot be identified");
         }
         return pathResolver.resolve(fileAccess.organizationId(), null, fileAccess.fileName());
