@@ -22,6 +22,9 @@ public class DocumentFileAccessResourceTest {
     @ConfigProperty(name = RFSConfig.USER_DOCUMENT_ROOT_DIRECTORY)
     String userDocumentRootDirectory;
 
+    @ConfigProperty(name = RFSConfig.ATTACHMENT_DOCUMENT_ROOT_DIRECTORY)
+    String attachmentDocumentRootDirectory;
+
     @Test
     void whenGetUserDocumentWithoutToken() {
         given()
@@ -81,7 +84,7 @@ public class DocumentFileAccessResourceTest {
         var userId = "1267890";
         var candidateDir = userId.substring(5);
         var organizationId = "FAKE";
-        var fileName = "document.pdf";
+        var fileName = "document.tmp";
         var path = Files.createDirectories(Paths.get(userDocumentRootDirectory, organizationId.toLowerCase(), candidateDir));
         var tempFile = Files.createFile(path.resolve(fileName));
         try {
@@ -92,6 +95,82 @@ public class DocumentFileAccessResourceTest {
                 .header("Accept", "application/octet-stream")
                 .header(DocumentAccessResourceService.TOKEN_HEADER, "test-token")
                 .get("/api/document/1")
+                .then()
+                .statusCode(RestResponse.Status.OK.getStatusCode())
+                .body(is("fake"));
+        } finally {
+            Files.delete(tempFile);
+        }
+    }
+
+    @Test
+    void whenGetAttachmentWithoutTokenErrorShouldReturn() {
+        given()
+            .when()
+            .header("Accept", "application/octet-stream")
+            .get("/api/attachment/1")
+            .then()
+            .statusCode(RestResponse.Status.BAD_REQUEST.getStatusCode());
+    }
+
+    @Test
+    void whenGetAttachmentInvalidFileAccessErrorShouldReturn() {
+        given()
+            .when()
+            .header(DocumentAccessResourceService.TOKEN_HEADER, "test-token")
+            .header("Accept", "application/octet-stream")
+            .get("/api/attachment/2")
+            .then()
+            .statusCode(RestResponse.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    void whenGetAttachmentInvalidTokenErrorShouldReturn() {
+        given()
+            .when()
+            .header(DocumentAccessResourceService.TOKEN_HEADER, "invalid-token")
+            .header("Accept", "application/octet-stream")
+            .get("/api/attachment/3")
+            .then()
+            .statusCode(RestResponse.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    void whenGetAttachmentFileNotExistErrorShouldReturn() {
+        given()
+            .when()
+            .header(DocumentAccessResourceService.TOKEN_HEADER, "test-token")
+            .header("Accept", "application/octet-stream")
+            .get("/api/attachment/1")
+            .then()
+            .statusCode(RestResponse.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    void whenGetAttachmentFileAccessServiceIsNotAvailableErrorShouldReturn() {
+        given()
+            .when()
+            .header(DocumentAccessResourceService.TOKEN_HEADER, "test-token")
+            .header("Accept", "application/octet-stream")
+            .get("/api/attachment/4")
+            .then()
+            .statusCode(RestResponse.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    void getAttachment() throws IOException {
+        var organizationId = "FAKE";
+        var fileName = "attachment.tmp";
+        var path = Files.createDirectories(Paths.get(attachmentDocumentRootDirectory, organizationId.toLowerCase()));
+        var tempFile = Files.createFile(path.resolve(fileName));
+        try {
+            Files.write(tempFile, "fake".getBytes());
+
+            given()
+                .when()
+                .header("Accept", "application/octet-stream")
+                .header(DocumentAccessResourceService.TOKEN_HEADER, "test-token")
+                .get("/api/attachment/1")
                 .then()
                 .statusCode(RestResponse.Status.OK.getStatusCode())
                 .body(is("fake"));

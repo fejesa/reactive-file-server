@@ -46,7 +46,7 @@ public class FileAccessResourceWireMockExtension implements QuarkusTestResourceL
         wireMockServer.stubFor(
                 get(urlEqualTo(BASE_PATH + "/document-access/document/1"))
                         .withHeader(DocumentAccessResourceService.TOKEN_HEADER, equalTo("test-token"))
-                        .willReturn(okJson(createFileAccessRequestBody("FAKE", "1267890", "document.pdf"))));
+                        .willReturn(okJson(createFileAccessRequestBody("FAKE", "1267890", "document.tmp"))));
 
         wireMockServer.stubFor(
                 get(urlEqualTo(BASE_PATH + "/document-access/document/2"))
@@ -82,6 +82,26 @@ public class FileAccessResourceWireMockExtension implements QuarkusTestResourceL
                 get(urlEqualTo(BASE_PATH + "/document-access/key"))
                         .withHeader(DocumentAccessResourceService.API_KEY_HEADER, equalTo("delayed-apikey"))
                         .willReturn(okJson(new ObjectMapper().writeValueAsString(Boolean.TRUE)).withFixedDelay(500)));
+
+        wireMockServer.stubFor(
+                get(urlEqualTo(BASE_PATH + "/document-access/attachment/1"))
+                        .withHeader(DocumentAccessResourceService.TOKEN_HEADER, equalTo("test-token"))
+                        .willReturn(okJson(createFileAccessRequestBody("FAKE", "1267890", "attachment.tmp"))));
+
+        wireMockServer.stubFor(
+                get(urlEqualTo(BASE_PATH + "/document-access/attachment/2"))
+                        .withHeader(DocumentAccessResourceService.TOKEN_HEADER, equalTo("test-token"))
+                        .willReturn(okJson(createFileAccessRequestBody("", "", ""))));
+
+        wireMockServer.stubFor(
+                get(urlEqualTo(BASE_PATH + "/document-access/attachment/3"))
+                        .withHeader(DocumentAccessResourceService.TOKEN_HEADER, equalTo("invalid-token"))
+                        .willReturn(okJson(createFileAccessRequestBody("", "", ""))));
+
+        wireMockServer.stubFor(
+                get(urlEqualTo(BASE_PATH + "/document-access/attachment/4"))
+                        .withHeader(DocumentAccessResourceService.TOKEN_HEADER, equalTo("test-token"))
+                        .willReturn(aResponse().withStatus(500).withFixedDelay(1500)));
     }
 
     private String createFileAccessRequestBody(String organizationId, String userId, String fileName) throws JsonProcessingException {

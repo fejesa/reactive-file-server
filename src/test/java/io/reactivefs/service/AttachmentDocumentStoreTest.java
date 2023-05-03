@@ -87,7 +87,6 @@ public class AttachmentDocumentStoreTest {
         var fileName = "attachment.tmp";
         var path = Files.createDirectories(Paths.get(attachmentDocumentDirectory, organizationId.toLowerCase()));
         var tempFile = Files.createFile(path.resolve(fileName));
-        System.out.println(tempFile);
         try {
             Files.write(tempFile, "fake".getBytes());
             var subscriber = documentStore.read(new DocumentFileAccess(organizationId, "", fileName))
