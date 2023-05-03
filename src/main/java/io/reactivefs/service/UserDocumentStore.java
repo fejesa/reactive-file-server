@@ -8,7 +8,10 @@ import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.core.buffer.Buffer;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Base64;
@@ -19,6 +22,8 @@ import static org.apache.commons.lang3.StringUtils.isAnyBlank;
 @UserDocument
 @ApplicationScoped
 public class UserDocumentStore implements DocumentStore, DocumentRemoval {
+
+    private final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Inject
     FileSystemHandler fileSystemHandler;
@@ -32,7 +37,11 @@ public class UserDocumentStore implements DocumentStore, DocumentRemoval {
         return Uni.createFrom().item(removeRequest)
             .map(function(this::documentPath))
             .onItem()
-            .transformToUni(fileSystemHandler::deleteFile);
+                .transformToUni(fileSystemHandler::deleteFile)
+                .onFailure().recoverWithUni(failure -> {
+                    logger.warn("Document removal error", failure);
+                    return Uni.createFrom().voidItem();
+                });
     }
 
     @Override

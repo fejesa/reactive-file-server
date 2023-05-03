@@ -32,11 +32,11 @@ public class UserDocumentStoreTest {
     String userDocumentDirectory;
 
     @Test
-    void whenInvalidSingleFileRemovalRequestShouldFail() {
+    void whenInvalidSingleFileRemovalRequestShouldIgnored() {
         var subscriber = documentStore.remove(new DocumentRemoveRequest("", "", "fake.tmp"))
             .subscribe()
             .withSubscriber(UniAssertSubscriber.create());
-        subscriber.assertFailedWith(StringIndexOutOfBoundsException.class);
+        subscriber.assertCompleted();
     }
 
     @Test

@@ -34,7 +34,7 @@ import static io.reactivefs.ext.DocumentAccessResourceService.TOKEN_HEADER;
  * The File Server does not offer neither session management and nor state management, but it authorizes
  * each request using the provided token by calling the access checker service (ACL).<p>
  * The documents are stored on the local file system. If the caller or the document cannot be identified,
- * or the document does not exist, or the user has no permission to access the document, then an empty response (HTTP 204) is returned.
+ * or the document does not exist, or the user has no permission to access the document, then an empty response (HTTP 404) is returned.
  */
 @Path("/api")
 @Produces(MediaType.APPLICATION_OCTET_STREAM)
