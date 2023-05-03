@@ -3,6 +3,7 @@ package io.reactivefs.rest;
 import io.reactivefs.RFSConfig;
 import io.reactivefs.ext.DocumentAccessResourceService;
 import io.reactivefs.model.DocumentFileAccess;
+import io.reactivefs.service.Attachment;
 import io.reactivefs.service.DocumentStore;
 import io.reactivefs.service.UserDocument;
 import io.smallrye.mutiny.Uni;
@@ -54,7 +55,11 @@ public class DocumentFileAccessResource {
 
     @Inject
     @UserDocument
-    DocumentStore documentStore;
+    DocumentStore userDocumentStore;
+
+    @Inject
+    @Attachment
+    DocumentStore attachmentDocumentStore;
 
     @Operation(
         summary = "Gets the user document",
@@ -77,7 +82,31 @@ public class DocumentFileAccessResource {
             @HeaderParam(TOKEN_HEADER) String token,
             @Parameter(description = "The unique identifier of the requested document")
             @PathParam("documentId") Long documentId) {
-        return readFile(token, documentId, fileAccessService::getUserDocumentAccess, documentStore);
+        return readFile(token, documentId, fileAccessService::getUserDocumentAccess, userDocumentStore);
+    }
+
+    @Operation(
+        summary = "Gets the requested attachment file",
+        description = "Reads the requested attachment document from the storage. It calls the ACL service for identifying the user and the file.")
+    @APIResponse(
+        responseCode = "200",
+        description = "The document content in binary format",
+        content = @Content(mediaType = "application/octet-stream"))
+    @APIResponse(
+        responseCode = "400",
+        description = "If the Token is missing from the header")
+    @APIResponse(
+        responseCode = "404",
+        description = "If the requested attachment is not found, or the user has no authorization to access that resource")
+    @GET
+    @Path("attachment/{attachmentId}")
+    public Uni<RestResponse<byte[]>> getAttachment(
+            @Parameter(description = "Signed token in Base 64 format that used for identification of the user")
+            @NotNull
+            @HeaderParam(TOKEN_HEADER) String token,
+            @Parameter(description = "The unique identifier of the requested attachment")
+            @PathParam("attachmentId") Long attachmentId) {
+        return readFile(token, attachmentId, fileAccessService::getAttachmentAccess, attachmentDocumentStore);
     }
 
     /**

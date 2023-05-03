@@ -28,8 +28,8 @@ public class FileSystemHandlerTest {
     @ConfigProperty(name = RFSConfig.USER_DOCUMENT_ROOT_DIRECTORY)
     String userDirectory;
 
-    @ConfigProperty(name = RFSConfig.ORGANIZATION_DOCUMENT_ROOT_DIRECTORY)
-    String organizationDirectory;
+    @ConfigProperty(name = RFSConfig.ATTACHMENT_DOCUMENT_ROOT_DIRECTORY)
+    String attachmentDirectory;
 
     private final String organizationId = "orgCodeFSTest";
 
@@ -148,7 +148,7 @@ public class FileSystemHandlerTest {
     }
 
     private Path createOrgFolder(String organizationId) throws IOException {
-        return Files.createDirectories(Paths.get(organizationDirectory, organizationId.toLowerCase()));
+        return Files.createDirectories(Paths.get(attachmentDirectory, organizationId.toLowerCase()));
     }
 
     private Path createUserFolder(String organizationId) throws IOException {

@@ -31,6 +31,17 @@ public interface DocumentAccessResourceService {
     Uni<DocumentFileAccess> getUserDocumentAccess(@HeaderParam(TOKEN_HEADER) String token, @PathParam("documentId") Long documentId);
 
     /**
+     * Checks if the given user can access to the given attachment file.
+     *
+     * @param token used for the identification of the user
+     * @param attachmentId identifier of the requested attachment document
+     * @return contains the information that is used for file identification or empty if the user has no access to the attachment
+     */
+    @GET
+    @Path("attachment/{attachmentId}")
+    Uni<DocumentFileAccess> getAttachmentAccess(@HeaderParam(TOKEN_HEADER) String token, @PathParam("attachmentId") Long attachmentId);
+
+    /**
      * Validates the provided apiKey sent by the application.
      *
      * @param apiKey The apiKey that must be validated.
