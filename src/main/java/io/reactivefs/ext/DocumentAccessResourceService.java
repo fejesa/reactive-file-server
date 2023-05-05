@@ -48,7 +48,7 @@ public interface DocumentAccessResourceService {
      * @return contains the information that is used for file identification or empty if the user cannot be identified
      */
     @GET
-    @Path("performance")
+    @Path("performance-document")
     Uni<DocumentFileAccess> getPerformanceResultAccess(@HeaderParam(TOKEN_HEADER) String token);
 
     /**

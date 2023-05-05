@@ -187,7 +187,7 @@ public class DocumentFileAccessResourceTest {
         given()
             .when()
             .header("Accept", "application/octet-stream")
-            .get("/api/performance")
+            .get("/api/performance-document")
             .then()
             .statusCode(RestResponse.Status.BAD_REQUEST.getStatusCode());
     }
@@ -198,7 +198,7 @@ public class DocumentFileAccessResourceTest {
             .when()
             .header(DocumentAccessResourceService.TOKEN_HEADER, "invalid-token")
             .header("Accept", "application/octet-stream")
-            .get("/api/performance")
+            .get("/api/performance-document")
             .then()
             .statusCode(RestResponse.Status.NOT_FOUND.getStatusCode());
     }
@@ -209,7 +209,7 @@ public class DocumentFileAccessResourceTest {
             .when()
             .header(DocumentAccessResourceService.TOKEN_HEADER, "test-token")
             .header("Accept", "application/octet-stream")
-            .get("/api/performance")
+            .get("/api/performance-document")
             .then()
             .statusCode(RestResponse.Status.NOT_FOUND.getStatusCode());
     }
@@ -220,7 +220,7 @@ public class DocumentFileAccessResourceTest {
             .when()
             .header(DocumentAccessResourceService.TOKEN_HEADER, "delayed-token")
             .header("Accept", "application/octet-stream")
-            .get("/api/performance")
+            .get("/api/performance-document")
             .then()
             .statusCode(RestResponse.Status.NOT_FOUND.getStatusCode());
     }
@@ -238,7 +238,7 @@ public class DocumentFileAccessResourceTest {
                 .when()
                 .header("Accept", "application/octet-stream")
                 .header(DocumentAccessResourceService.TOKEN_HEADER, "test-token")
-                .get("/api/performance")
+                .get("/api/performance-document")
                 .then()
                 .statusCode(RestResponse.Status.OK.getStatusCode())
                 .body(is("fake"));

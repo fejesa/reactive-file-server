@@ -104,17 +104,17 @@ public class FileAccessResourceWireMockExtension implements QuarkusTestResourceL
                         .willReturn(aResponse().withStatus(500).withFixedDelay(1500)));
 
         wireMockServer.stubFor(
-                get(urlEqualTo(BASE_PATH + "/document-access/performance"))
+                get(urlEqualTo(BASE_PATH + "/document-access/performance-document"))
                         .withHeader(DocumentAccessResourceService.TOKEN_HEADER, equalTo("test-token"))
                         .willReturn(okJson(createFileAccessRequestBody("FAKE","1267890", ""))));
 
         wireMockServer.stubFor(
-                get(urlEqualTo(BASE_PATH + "/document-access/performance"))
+                get(urlEqualTo(BASE_PATH + "/document-access/performance-document"))
                         .withHeader(DocumentAccessResourceService.TOKEN_HEADER, equalTo("invalid-token"))
                         .willReturn(okJson(createFileAccessRequestBody("", "", ""))));
 
         wireMockServer.stubFor(
-                get(urlEqualTo(BASE_PATH + "/document-access/performance"))
+                get(urlEqualTo(BASE_PATH + "/document-access/performance-document"))
                         .withHeader(DocumentAccessResourceService.TOKEN_HEADER, equalTo("delayed-token"))
                         .willReturn(aResponse().withStatus(500).withFixedDelay(1500)));
     }

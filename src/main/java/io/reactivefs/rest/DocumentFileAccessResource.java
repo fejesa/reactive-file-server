@@ -80,7 +80,7 @@ public class DocumentFileAccessResource {
         responseCode = "404",
         description = "If the requested document is not found, or the user has no authorization to access that resource")
     @GET
-    @Path("performance")
+    @Path("performance-document")
     public Uni<RestResponse<byte[]>> getUserPerformanceResultDocument(
             @Parameter(description = "Signed token in Base 64 format that used for identification of the user")
             @NotNull
