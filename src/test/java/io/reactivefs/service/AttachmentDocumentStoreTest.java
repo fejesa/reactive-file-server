@@ -82,7 +82,7 @@ public class AttachmentDocumentStoreTest {
     }
 
     @Test
-    void readExistAttachment() throws IOException {
+    void readExistingAttachment() throws IOException {
         var organizationId = "FAKE";
         var fileName = "attachment.tmp";
         var path = Files.createDirectories(Paths.get(attachmentDocumentDirectory, organizationId.toLowerCase()));
