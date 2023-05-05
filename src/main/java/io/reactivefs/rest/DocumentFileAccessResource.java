@@ -5,6 +5,7 @@ import io.reactivefs.ext.DocumentAccessResourceService;
 import io.reactivefs.model.DocumentFileAccess;
 import io.reactivefs.service.Attachment;
 import io.reactivefs.service.DocumentStore;
+import io.reactivefs.service.PerformanceResult;
 import io.reactivefs.service.UserDocument;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
@@ -60,6 +61,32 @@ public class DocumentFileAccessResource {
     @Inject
     @Attachment
     DocumentStore attachmentDocumentStore;
+
+    @Inject
+    @PerformanceResult
+    DocumentStore performanceResultDocumentStore;
+
+    @Operation(
+        summary = "Gets the user performance document",
+        description = "Reads the requested document from the storage. It calls the ACL service for identifying the user and the file.")
+    @APIResponse(
+        responseCode = "200",
+        description = "The document content in binary format",
+        content = @Content(mediaType = "application/octet-stream"))
+    @APIResponse(
+        responseCode = "400",
+        description = "If the Token is missing from the header")
+    @APIResponse(
+        responseCode = "404",
+        description = "If the requested document is not found, or the user has no authorization to access that resource")
+    @GET
+    @Path("performance")
+    public Uni<RestResponse<byte[]>> getUserPerformanceResultDocument(
+            @Parameter(description = "Signed token in Base 64 format that used for identification of the user")
+            @NotNull
+            @HeaderParam(TOKEN_HEADER) String token) {
+        return readFile(token, 0L, (t, __) -> fileAccessService.getPerformanceResultAccess(t), performanceResultDocumentStore);
+    }
 
     @Operation(
         summary = "Gets the user document",

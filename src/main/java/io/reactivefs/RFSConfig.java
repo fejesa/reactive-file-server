@@ -10,6 +10,8 @@ public class RFSConfig {
 
     public static final String USER_DOCUMENT_ROOT_DIRECTORY = "fs.user.document.dir";
 
+    public static final String PERFORMANCE_DOCUMENT_ROOT_DIRECTORY = "fs.performance.document.dir";
+
     private RFSConfig() {
     }
 }

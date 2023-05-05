@@ -42,6 +42,16 @@ public interface DocumentAccessResourceService {
     Uni<DocumentFileAccess> getAttachmentAccess(@HeaderParam(TOKEN_HEADER) String token, @PathParam("attachmentId") Long attachmentId);
 
     /**
+     * Checks if the given user can access to the given performance result file.
+     *
+     * @param token used for the identification of the user
+     * @return contains the information that is used for file identification or empty if the user cannot be identified
+     */
+    @GET
+    @Path("performance")
+    Uni<DocumentFileAccess> getPerformanceResultAccess(@HeaderParam(TOKEN_HEADER) String token);
+
+    /**
      * Validates the provided apiKey sent by the application.
      *
      * @param apiKey The apiKey that must be validated.
