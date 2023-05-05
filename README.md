@@ -61,9 +61,19 @@ then the full path of the file is  ```DOCUMENT_TYPE_ROOT/sampleorg/3456345```
 ### Writing file use case
 Each time a write request is received, the request body not only contains the file content but also the user ID, organization, and file name. In this situation, the request header contains an ApiKey, which serves as a token for authorizing the application.
 
-## How to build it
-TODO
+## Requirements
+* Java 17+
+* Maven
 
-## How to run it
-TODO
+## How to build
+Execute the following command
+```
+mvn clean package
+```
+
+## How to run
+Execute the following command
+```
+mvn quarkus:dev
+```
 

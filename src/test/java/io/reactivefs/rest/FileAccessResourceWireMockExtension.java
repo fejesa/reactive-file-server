@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
 import io.reactivefs.ext.DocumentAccessResourceService;
+import io.reactivefs.model.ApplicationAuth;
 import io.reactivefs.model.DocumentFileAccess;
 
 import java.util.Collections;
@@ -66,12 +67,12 @@ public class FileAccessResourceWireMockExtension implements QuarkusTestResourceL
         wireMockServer.stubFor(
                 get(urlEqualTo(BASE_PATH + "/document-access/key"))
                         .withHeader(DocumentAccessResourceService.API_KEY_HEADER, equalTo("apikey"))
-                        .willReturn(okJson(new ObjectMapper().writeValueAsString(Boolean.TRUE))));
+                        .willReturn(okJson(createApplicationAuthBody(Boolean.TRUE))));
 
         wireMockServer.stubFor(
                 get(urlEqualTo(BASE_PATH + "/document-access/key"))
                         .withHeader(DocumentAccessResourceService.API_KEY_HEADER, equalTo("invalid-apikey"))
-                        .willReturn(okJson(new ObjectMapper().writeValueAsString(Boolean.FALSE))));
+                        .willReturn(okJson(createApplicationAuthBody(Boolean.FALSE))));
 
         wireMockServer.stubFor(
                 get(urlEqualTo(BASE_PATH + "/document-access/key"))
@@ -81,7 +82,7 @@ public class FileAccessResourceWireMockExtension implements QuarkusTestResourceL
         wireMockServer.stubFor(
                 get(urlEqualTo(BASE_PATH + "/document-access/key"))
                         .withHeader(DocumentAccessResourceService.API_KEY_HEADER, equalTo("delayed-apikey"))
-                        .willReturn(okJson(new ObjectMapper().writeValueAsString(Boolean.TRUE)).withFixedDelay(500)));
+                        .willReturn(okJson(createApplicationAuthBody(Boolean.TRUE)).withFixedDelay(500)));
 
         wireMockServer.stubFor(
                 get(urlEqualTo(BASE_PATH + "/document-access/attachment/1"))
@@ -122,5 +123,10 @@ public class FileAccessResourceWireMockExtension implements QuarkusTestResourceL
     private String createFileAccessRequestBody(String organizationId, String userId, String fileName) throws JsonProcessingException {
         var mapper = new ObjectMapper();
         return mapper.writeValueAsString(new DocumentFileAccess(organizationId, userId, fileName));
+    }
+
+    private String createApplicationAuthBody(boolean authorized) throws JsonProcessingException {
+        var mapper = new ObjectMapper();
+        return mapper.writeValueAsString(new ApplicationAuth(authorized));
     }
 }

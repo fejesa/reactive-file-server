@@ -66,8 +66,8 @@ public class ApiKeyCache {
                     .retry()
                     .withBackOff(Duration.ofMillis(RETRY_INITIAL_BACKOFF_MS))
                     .expireIn(RETRY_EXPIRATION_MS)
-                    .map(Unchecked.function(valid -> {
-                        if (Boolean.TRUE.equals(valid)) {
+                    .map(Unchecked.function(applicationAuth -> {
+                        if (applicationAuth.authorized()) {
                             return key;
                         }
                         throw new IllegalArgumentException("Invalid ApiKey");

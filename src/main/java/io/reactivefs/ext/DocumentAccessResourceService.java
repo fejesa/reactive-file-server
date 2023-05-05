@@ -1,5 +1,6 @@
 package io.reactivefs.ext;
 
+import io.reactivefs.model.ApplicationAuth;
 import io.reactivefs.model.DocumentFileAccess;
 import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.*;
@@ -55,9 +56,9 @@ public interface DocumentAccessResourceService {
      * Validates the provided apiKey sent by the application.
      *
      * @param apiKey The apiKey that must be validated.
-     * @return lazy evaluated value: true if the key is valid
+     * @return lazy evaluated value, the application is authorized to execute write operation if the key is valid
      */
     @GET
     @Path("key")
-    Uni<Boolean> validateApiKey(@HeaderParam(API_KEY_HEADER) String apiKey);
+    Uni<ApplicationAuth> validateApiKey(@HeaderParam(API_KEY_HEADER) String apiKey);
 }
