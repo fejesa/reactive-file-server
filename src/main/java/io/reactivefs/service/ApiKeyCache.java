@@ -61,16 +61,16 @@ public class ApiKeyCache {
 
     private Uni<String> validateOrSkip(String key, boolean validate) {
         return validate ?
-                documentAccessService.validateApiKey(key)
-                    .onFailure()
-                    .retry()
-                    .withBackOff(Duration.ofMillis(RETRY_INITIAL_BACKOFF_MS))
-                    .expireIn(RETRY_EXPIRATION_MS)
-                    .map(Unchecked.function(applicationAuth -> {
-                        if (applicationAuth.authorized()) {
-                            return key;
-                        }
-                        throw new IllegalArgumentException("Invalid ApiKey");
-                    })) : Uni.createFrom().item(key);
+            documentAccessService.validateApiKey(key)
+                .onFailure()
+                .retry()
+                .withBackOff(Duration.ofMillis(RETRY_INITIAL_BACKOFF_MS))
+                .expireIn(RETRY_EXPIRATION_MS)
+                .map(Unchecked.function(applicationAuth -> {
+                    if (applicationAuth.authorized()) {
+                        return key;
+                    }
+                    throw new IllegalArgumentException("Invalid ApiKey");
+                })) : Uni.createFrom().item(key);
     }
 }

@@ -61,7 +61,7 @@ then the full path of the file is  ```DOCUMENT_TYPE_ROOT/sampleorg/3456345```
 ### Writing file use case
 Each time a write request is received, the request body not only contains the file content but also the user ID, organization, and file name. In this situation, the request header contains an ApiKey, which serves as a token for authorizing the application.
 
-## Requirements
+## Reactive File Server build and run requirements
 * Java 17+
 * Maven
 
@@ -77,3 +77,25 @@ Execute the following command
 mvn quarkus:dev
 ```
 
+## How to test
+Any command-line HTTP client, for example [httpie](https://httpie.io/), can be utilized for retrieving or sending document files to the Reactive File Server.
+
+The [json-server](https://github.com/typicode/json-server) can be used as a means to simulate/mock the Access Control service.
+The ```routes.json``` defines the ACL service REST API, and the ```db.json``` contains the mocked responses.
+
+You can start the mock server from command line: ```json-server db.json --routes routes.json```.
+
+How about we create a document on the Reactive File Server and then retrieve it?
+Let's call our organization ```sampleOrg```, our user ID ```1234567``` and our document file name is ```hello-doc```.
+Firstly encode the file content in the following way:
+```
+echo -n 'Hello Reactive File Server!' | base64
+```
+then send the document
+```
+http POST localhost:8888/api/document organizationId=sampleOrg userId=1234567 fileName=hello-doc content='SGVsbG8gUmVhY3RpdmUgRmlsZSBTZXJ2ZXIh' ApiKey:abcd
+```
+In case of success you get ```HTTP 201``` response.
+
+How you can fetch the document? From command line type ```http localhost:8888/api/document/1 Token:mytoken```
+and upon retrieval, the document that was previously written will be returned.

@@ -1,0 +1,6 @@
+{
+  "document": [
+    { "id": 1, "organizationId": "sampleOrg", "userId": "1234567", "fileName": "hello-doc" }
+  ],
+  "key": {"authorized": "true"}
+}
