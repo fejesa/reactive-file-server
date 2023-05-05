@@ -25,6 +25,9 @@ public class DocumentFileAccessResourceTest {
     @ConfigProperty(name = RFSConfig.ATTACHMENT_DOCUMENT_ROOT_DIRECTORY)
     String attachmentDocumentRootDirectory;
 
+    @ConfigProperty(name = RFSConfig.PERFORMANCE_DOCUMENT_ROOT_DIRECTORY)
+    String performanceDocumentRootDirectory;
+
     @Test
     void whenGetUserDocumentWithoutToken() {
         given()
@@ -171,6 +174,71 @@ public class DocumentFileAccessResourceTest {
                 .header("Accept", "application/octet-stream")
                 .header(DocumentAccessResourceService.TOKEN_HEADER, "test-token")
                 .get("/api/attachment/1")
+                .then()
+                .statusCode(RestResponse.Status.OK.getStatusCode())
+                .body(is("fake"));
+        } finally {
+            Files.delete(tempFile);
+        }
+    }
+
+    @Test
+    void whenGetPerformanceResultDocumentWithoutToken() {
+        given()
+            .when()
+            .header("Accept", "application/octet-stream")
+            .get("/api/performance")
+            .then()
+            .statusCode(RestResponse.Status.BAD_REQUEST.getStatusCode());
+    }
+
+    @Test
+    void whenPerformanceResultDocumentInvalidToken() {
+        given()
+            .when()
+            .header(DocumentAccessResourceService.TOKEN_HEADER, "invalid-token")
+            .header("Accept", "application/octet-stream")
+            .get("/api/performance")
+            .then()
+            .statusCode(RestResponse.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    void whenPerformanceResultDocumentFileNotExist() {
+        given()
+            .when()
+            .header(DocumentAccessResourceService.TOKEN_HEADER, "test-token")
+            .header("Accept", "application/octet-stream")
+            .get("/api/performance")
+            .then()
+            .statusCode(RestResponse.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    void whenPerformanceResultFileAccessServiceIsNotAvailable() {
+        given()
+            .when()
+            .header(DocumentAccessResourceService.TOKEN_HEADER, "delayed-token")
+            .header("Accept", "application/octet-stream")
+            .get("/api/performance")
+            .then()
+            .statusCode(RestResponse.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    void getPerformanceResult() throws IOException {
+        var userId = "1267890";
+        var organizationId = "FAKE";
+        var path = Files.createDirectories(Paths.get(performanceDocumentRootDirectory, organizationId.toLowerCase()));
+        var tempFile = Files.createFile(path.resolve(userId));
+        try {
+            Files.write(tempFile, "fake".getBytes());
+
+            given()
+                .when()
+                .header("Accept", "application/octet-stream")
+                .header(DocumentAccessResourceService.TOKEN_HEADER, "test-token")
+                .get("/api/performance")
                 .then()
                 .statusCode(RestResponse.Status.OK.getStatusCode())
                 .body(is("fake"));
