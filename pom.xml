@@ -18,15 +18,13 @@
         <maven.compiler.release>17</maven.compiler.release>
         <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
-        <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
-        <maven-assembly-plugin.version>3.4.1</maven-assembly-plugin.version>
         <dependency-check-maven.version>7.1.1</dependency-check-maven.version>
         <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-        <quarkus.platform.version>3.0.1.Final</quarkus.platform.version>
+        <quarkus.platform.version>3.0.3.Final</quarkus.platform.version>
 
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <wiremock.version>2.35.0</wiremock.version>
@@ -156,21 +154,16 @@
                         <version>${jacoco-maven-plugin.version}</version>
                         <executions>
                             <execution>
-                                <id>prepare-agent</id>
                                 <goals>
                                     <goal>prepare-agent</goal>
                                 </goals>
                             </execution>
                             <execution>
                                 <id>report</id>
+                                <phase>prepare-package</phase>
                                 <goals>
                                     <goal>report</goal>
                                 </goals>
-                                <configuration>
-                                    <formats>
-                                        <format>XML</format>
-                                    </formats>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
